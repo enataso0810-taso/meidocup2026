@@ -1,18 +1,37 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// ─────────────────────────────────────────────────────────────
-//  GitHub Pages 設定
-//  ・ユーザー/組織サイト (https://<user>.github.io/) に置く場合
-//      site: 'https://<user>.github.io',  base は指定しない
-//  ・プロジェクトサイト (https://<user>.github.io/<repo>/) に置く場合
-site: 'https://<user>.github.io',  base: '/<repo>'
-//  ・独自ドメイン (https://akedohai.jp/) の場合
-//      site: 'https://akedohai.jp',       base は指定しない
-// ─────────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
+   公開先の設定 ─ 書き換えるのは下の SITE と BASE の 2 行だけです
+   ═══════════════════════════════════════════════════════════════ */
+
+/**
+ * サイトを公開するドメイン。末尾のスラッシュは付けません。
+ *   例) 'https://ginka1108.github.io'
+ *   例) 'https://akedohai.jp'          ← 独自ドメインの場合
+ */
+const SITE = 'https://ginka1108.github.io';
+
+/**
+ * サブディレクトリ名。先頭にスラッシュを付け、末尾には付けません。
+ * サブディレクトリを使わない場合は空文字 '' のままにしてください。
+ *
+ *   公開URL                                    BASE に書く値
+ *   ─────────────────────────────────────────  ─────────────
+ *   https://ユーザー名.github.io/               ''
+ *   https://ユーザー名.github.io/リポジトリ名/    '/リポジトリ名'
+ *   https://独自ドメイン/                       ''
+ */
+const BASE = '/-2026';
+
+/* ═══════════════════════════════════════════════════════════════
+   これより下は変更不要です
+   ═══════════════════════════════════════════════════════════════ */
+
 export default defineConfig({
-  site: 'https://example.github.io',
-  // base: '/akedo-hai-2026',
+  site: SITE,
+  // BASE が空文字のときは base を渡さない（＝ルート直下に公開）
+  ...(BASE ? { base: BASE } : {}),
   trailingSlash: 'ignore',
   build: { format: 'directory' },
   devToolbar: { enabled: false },
