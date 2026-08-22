@@ -1,0 +1,280 @@
+/* ===========================================================================
+   明戸杯2026 ─ デザイントークン & グローバルスタイル
+   配色は公式ロゴ／配信画面デザインから抽出
+   =========================================================================== */
+
+:root {
+  /* --- 紅 (crimson) --- */
+  --c-crimson:        #c8103c;
+  --c-crimson-deep:   #a30a2e;
+  --c-crimson-dark:   #7d0722;
+  --c-crimson-ink:    #5c0518;
+  /* --- ロゴのピンク赤 --- */
+  --c-rouge:          #f0546a;
+  --c-rouge-light:    #ff8a92;
+  /* --- 深緑 (teal) --- */
+  --c-teal:           #0e7c6e;
+  --c-teal-deep:      #0a5c51;
+  --c-teal-light:     #2aa595;
+  /* --- 金 (gold) --- */
+  --c-gold:           #d9a441;
+  --c-gold-light:     #f2d89b;
+  --c-gold-pale:      #f7e7c6;
+  /* --- 生成り (paper) --- */
+  --c-paper:          #fbf3e2;
+  --c-paper-dim:      #f0e2c6;
+  /* --- 墨 (ink) --- */
+  --c-ink:            #5a2b24;
+  --c-ink-soft:       #7a4a3f;
+
+  --font-mincho: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-gothic: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --font-en:     'Cinzel', 'Shippori Mincho B1', serif;
+
+  --shell: 1180px;
+  --radius: 4px;
+
+  --shadow-card: 0 10px 30px rgba(60, 4, 18, .28);
+  --shadow-soft: 0 4px 14px rgba(60, 4, 18, .18);
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-gothic);
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--c-paper);
+  background-color: var(--c-crimson-dark);
+  /* --bg-pattern は Base.astro が base パスを解決して注入します */
+  background-image:
+    linear-gradient(rgba(93, 5, 26, .82), rgba(93, 5, 26, .82)),
+    var(--bg-pattern, none);
+  background-size: auto, 720px auto;
+  background-attachment: fixed, fixed;
+  background-repeat: repeat, repeat;
+  overflow-x: hidden;
+  letter-spacing: .02em;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* 日本語見出しの改行位置を文節単位に（対応ブラウザのみ） */
+h1, h2, h3, h4, .hero__tagline, .page-head__title, .sect-head h2 {
+  word-break: auto-phrase;
+  line-break: strict;
+}
+a { color: var(--c-gold-light); text-decoration: none; transition: color .2s ease; }
+a:hover { color: #fff; }
+:focus-visible { outline: 2px solid var(--c-gold-light); outline-offset: 3px; border-radius: 2px; }
+
+/* --- レイアウト ------------------------------------------------------ */
+.shell { width: min(100% - 2.5rem, var(--shell)); margin-inline: auto; }
+.shell-narrow { width: min(100% - 2.5rem, 880px); margin-inline: auto; }
+
+.section { padding: clamp(3.5rem, 8vw, 6.5rem) 0; position: relative; }
+.section + .section { padding-top: 0; }
+
+/* --- 見出し：縦組みの札 ---------------------------------------------- */
+.sect-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.1rem;
+  margin: 0 0 2.6rem;
+  position: relative;
+}
+.sect-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  margin-bottom: .9rem;
+  background: linear-gradient(90deg, var(--c-gold) 0%, rgba(217,164,65,.15) 100%);
+}
+.sect-head h2 {
+  font-family: var(--font-mincho);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4.2vw, 2.5rem);
+  line-height: 1.25;
+  margin: 0;
+  color: var(--c-paper);
+  text-shadow: 0 2px 10px rgba(0,0,0,.4);
+}
+.sect-head .en {
+  font-family: var(--font-en);
+  font-size: .78rem;
+  letter-spacing: .34em;
+  color: var(--c-gold);
+  margin-bottom: .75rem;
+  white-space: nowrap;
+}
+.sect-lead {
+  max-width: 62ch;
+  margin: -1.4rem 0 2.6rem;
+  color: rgba(251,243,226,.82);
+  font-size: .97rem;
+}
+
+/* --- 和紙カード ------------------------------------------------------ */
+.washi {
+  position: relative;
+  background:
+    linear-gradient(155deg, #fdf8ec 0%, var(--c-paper) 46%, #f3e6cd 100%);
+  color: var(--c-ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+.washi::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(217,164,65,.75);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* --- 金枠パネル（紅地） ---------------------------------------------- */
+.panel {
+  position: relative;
+  background: linear-gradient(160deg, rgba(163,10,46,.92), rgba(109,5,30,.94));
+  border: 1px solid rgba(217,164,65,.55);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card), inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.panel::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(217,164,65,.28);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* --- 角の雷紋 -------------------------------------------------------- */
+.corner-key { position: relative; }
+.corner-key::before, .corner-key::after {
+  content: '';
+  position: absolute;
+  width: 22px; height: 22px;
+  border: 2px solid var(--c-gold);
+  opacity: .8;
+  pointer-events: none;
+}
+.corner-key::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.corner-key::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+/* --- リボン見出し ---------------------------------------------------- */
+.ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .38rem 1.5rem .38rem 1.1rem;
+  background: linear-gradient(100deg, var(--c-teal-deep), var(--c-teal));
+  color: var(--c-gold-pale);
+  font-family: var(--font-mincho);
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .12em;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 50%, 100% 100%, 0 100%);
+  box-shadow: var(--shadow-soft);
+}
+.ribbon-gold {
+  background: linear-gradient(100deg, #b8862c, var(--c-gold));
+  color: #4a2606;
+}
+
+/* --- ボタン ---------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  padding: .85rem 2rem;
+  font-family: var(--font-mincho);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .1em;
+  border-radius: 999px;
+  border: 1px solid var(--c-gold);
+  background: linear-gradient(160deg, var(--c-rouge), var(--c-crimson));
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(200,16,60,.4), inset 0 1px 0 rgba(255,255,255,.3);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  cursor: pointer;
+}
+.btn:hover { transform: translateY(-2px); color: #fff; filter: brightness(1.08); box-shadow: 0 10px 26px rgba(200,16,60,.5); }
+.btn-ghost {
+  background: rgba(251,243,226,.06);
+  color: var(--c-gold-light);
+  box-shadow: none;
+}
+.btn-ghost:hover { background: rgba(251,243,226,.14); color: #fff; box-shadow: none; }
+.btn-teal { background: linear-gradient(160deg, var(--c-teal-light), var(--c-teal-deep)); box-shadow: 0 6px 20px rgba(14,124,110,.4), inset 0 1px 0 rgba(255,255,255,.25); }
+
+/* --- SNSリンク ------------------------------------------------------- */
+.sns { display: inline-flex; gap: .5rem; }
+.sns a {
+  display: inline-grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(217,164,65,.5);
+  background: rgba(92,5,24,.55);
+  color: var(--c-gold-light);
+  transition: background .2s ease, transform .2s ease, border-color .2s ease;
+}
+.sns a:hover { background: var(--c-crimson); transform: translateY(-2px); border-color: var(--c-gold-light); color: #fff; }
+.sns svg { width: 15px; height: 15px; fill: currentColor; }
+.sns-on-paper a { background: rgba(251,243,226,.6); color: var(--c-ink); border-color: rgba(90,43,36,.28); }
+.sns-on-paper a:hover { background: var(--c-crimson); color: #fff; }
+
+/* --- 注記 ------------------------------------------------------------ */
+.note {
+  font-size: .84rem;
+  line-height: 1.8;
+  color: rgba(251,243,226,.68);
+}
+.washi .note { color: var(--c-ink-soft); }
+
+/* --- 区切りの梅 ------------------------------------------------------ */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: clamp(2.5rem, 6vw, 4rem) 0;
+  color: var(--c-gold);
+  opacity: .75;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(217,164,65,.6), transparent);
+}
+
+/* --- ユーティリティ -------------------------------------------------- */
+.tate {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-feature-settings: 'vert' 1;
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1); }
+.reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }

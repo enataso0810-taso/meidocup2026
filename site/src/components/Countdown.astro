@@ -1,0 +1,184 @@
+---
+interface Props {
+  /** ISO8601（+09:00 推奨） */
+  target: string;
+  label: string;
+  /** 締切後に出す文言 */
+  finishedText?: string;
+  /** 見た目のバリエーション */
+  variant?: 'gold' | 'teal';
+  sublabel?: string;
+}
+const {
+  target,
+  label,
+  finishedText = '締め切りました',
+  variant = 'gold',
+  sublabel,
+} = Astro.props;
+const id = `cd-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div class:list={['cd', `cd--${variant}`]} id={id} data-target={target}>
+  <p class="cd__label">{label}</p>
+  {sublabel && <p class="cd__sublabel">{sublabel}</p>}
+
+  <div class="cd__grid" data-live>
+    <div class="cd__unit"><span class="cd__num" data-d>--</span><span class="cd__cap">DAYS</span></div>
+    <span class="cd__sep" aria-hidden="true">:</span>
+    <div class="cd__unit"><span class="cd__num" data-h>--</span><span class="cd__cap">HOURS</span></div>
+    <span class="cd__sep" aria-hidden="true">:</span>
+    <div class="cd__unit"><span class="cd__num" data-m>--</span><span class="cd__cap">MIN</span></div>
+    <span class="cd__sep" aria-hidden="true">:</span>
+    <div class="cd__unit"><span class="cd__num" data-s>--</span><span class="cd__cap">SEC</span></div>
+  </div>
+
+  <p class="cd__done" data-done hidden>{finishedText}</p>
+</div>
+
+<script is:inline define:vars={{ id }}>
+  (() => {
+    const root = document.getElementById(id);
+    if (!root) return;
+    const target = new Date(root.dataset.target || '').getTime();
+    if (!Number.isFinite(target)) {
+      root.querySelector('[data-live]')?.setAttribute('hidden', '');
+      const d = root.querySelector('[data-done]');
+      if (d) { d.textContent = '日程調整中'; d.removeAttribute('hidden'); }
+      return;
+    }
+
+    const grid = root.querySelector('[data-live]');
+    const done = root.querySelector('[data-done]');
+    const el = {
+      d: root.querySelector('[data-d]'),
+      h: root.querySelector('[data-h]'),
+      m: root.querySelector('[data-m]'),
+      s: root.querySelector('[data-s]'),
+    };
+    const pad = (n) => String(n).padStart(2, '0');
+
+    let last = '';
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        grid?.setAttribute('hidden', '');
+        done?.removeAttribute('hidden');
+        clearInterval(timer);
+        return;
+      }
+      const s = Math.floor(diff / 1000);
+      const days = Math.floor(s / 86400);
+      const hours = Math.floor((s % 86400) / 3600);
+      const mins = Math.floor((s % 3600) / 60);
+      const secs = s % 60;
+      if (el.d) el.d.textContent = String(days);
+      if (el.h) el.h.textContent = pad(hours);
+      if (el.m) el.m.textContent = pad(mins);
+      if (el.s && last !== String(secs)) {
+        el.s.textContent = pad(secs);
+        el.s.classList.remove('is-beat');
+        void el.s.offsetWidth;
+        el.s.classList.add('is-beat');
+        last = String(secs);
+      }
+      // 残り1時間を切ったら強調
+      root.classList.toggle('is-urgent', diff < 3600 * 1000);
+    };
+    tick();
+    const timer = setInterval(tick, 1000);
+  })();
+</script>
+
+<style>
+  .cd {
+    position: relative;
+    padding: clamp(1.4rem, 4vw, 2.1rem) clamp(1rem, 4vw, 2.4rem);
+    border: 1px solid rgba(217, 164, 65, 0.55);
+    border-radius: 4px;
+    background: linear-gradient(160deg, rgba(60, 3, 16, 0.62), rgba(92, 5, 24, 0.5));
+    backdrop-filter: blur(4px);
+    text-align: center;
+    overflow: hidden;
+  }
+  .cd::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, rgba(217, 164, 65, 0.09) 0 2px, transparent 2px 9px);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .cd--teal { background: linear-gradient(160deg, rgba(10, 92, 81, 0.6), rgba(6, 60, 53, 0.55)); border-color: rgba(42, 165, 149, 0.6); }
+
+  .cd__label {
+    position: relative;
+    margin: 0 0 0.2rem;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: clamp(0.95rem, 2.4vw, 1.12rem);
+    letter-spacing: 0.16em;
+    color: var(--c-gold-light);
+  }
+  .cd--teal .cd__label { color: #a7ecdf; }
+  .cd__sublabel {
+    position: relative;
+    margin: 0 0 1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: rgba(251, 243, 226, 0.66);
+  }
+
+  .cd__grid {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(0.2rem, 1.4vw, 0.7rem);
+    margin-top: 0.7rem;
+  }
+  .cd__unit { display: grid; justify-items: center; min-width: clamp(48px, 12vw, 78px); }
+  .cd__num {
+    font-family: var(--font-en);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 7vw, 3.2rem);
+    line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 22px rgba(242, 216, 155, 0.5), 0 3px 10px rgba(0, 0, 0, 0.5);
+  }
+  .cd__num.is-beat { animation: beat 0.5s ease-out; }
+  @keyframes beat {
+    0% { transform: scale(1.14); color: var(--c-gold-light); }
+    100% { transform: scale(1); color: #fff; }
+  }
+  .cd__cap {
+    margin-top: 0.4rem;
+    font-family: var(--font-en);
+    font-size: 0.52rem;
+    letter-spacing: 0.24em;
+    color: rgba(242, 216, 155, 0.72);
+  }
+  .cd__sep {
+    font-family: var(--font-en);
+    font-size: clamp(1.3rem, 5vw, 2.2rem);
+    line-height: 1;
+    color: rgba(242, 216, 155, 0.45);
+    margin-top: 0.15em;
+  }
+
+  .cd.is-urgent { border-color: var(--c-rouge-light); }
+  .cd.is-urgent .cd__num { color: #ffd9d0; text-shadow: 0 0 26px rgba(255, 120, 130, 0.75); }
+
+  .cd__done {
+    position: relative;
+    margin: 0.8rem 0 0;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 3.6vw, 1.6rem);
+    letter-spacing: 0.14em;
+    color: var(--c-gold-light);
+  }
+
+  @media (prefers-reduced-motion: reduce) { .cd__num.is-beat { animation: none; } }
+</style>

@@ -1,0 +1,342 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import SnsLinks from '../components/SnsLinks.astro';
+import { SPONSORS, AGRELUX } from '../data/sponsors';
+import { withBase } from '../lib/path';
+
+const hasCoupon = AGRELUX.couponCode !== '';
+---
+
+<Base
+  title="企業協賛"
+  pageTitle="企業協賛"
+  pageTitleEn="SPONSORS"
+  pageLead={`明戸杯2026は、${SPONSORS.length}社の企業様のあたたかいご協賛により開催されます。素敵な賞品をご提供いただき、誠にありがとうございます。`}
+>
+  {/* ===== 協賛企業一覧 ===== */}
+  <section class="section">
+    <div class="shell">
+      <div class="sgrid">
+        {SPONSORS.map((s, i) => (
+          <article class="scard washi corner-key reveal">
+            <span class="scard__no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+
+            <div class="scard__logo">
+              <img
+                src={withBase(`assets/sponsors/${s.logo}`)}
+                alt={s.name}
+                width="480"
+                height="240"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <div class="scard__body">
+              <h2 class="scard__name">{s.name}</h2>
+              {s.offering && <p class="scard__offer">{s.offering}</p>}
+
+              <div class="scard__links">
+                <SnsLinks x={s.x} site={s.site} siteLabel={s.siteLabel} name={s.name} onPaper />
+                {s.site && (
+                  <a class="scard__site" href={s.site} target="_blank" rel="noopener noreferrer">
+                    {s.siteLabel ?? '公式サイト'}<span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ===== スリーアール株式会社様 特設ブロック ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead
+        title="スリーアール株式会社様"
+        en="PICK UP SPONSOR"
+        lead="1位賞品のゲーミングチェア「AGRelux」、および集中してたで賞の「ZONIQ」をご提供いただいています。"
+      />
+
+      <div class="pickup panel reveal">
+        <div class="pickup__main">
+          <p class="ribbon">AGRelux（アグリラックス）</p>
+          <p class="pickup__desc">{AGRELUX.pressReleaseSummary}</p>
+
+          <div class="pickup__zoniq">
+            <h3>ZONIQ（ゾニック）</h3>
+            <p>
+              AGReluxが手がける集中系サプリメント（一般食品）。カフェインとロディオラを配合し、
+              「オンに切り替えたい時の集中サポート」をコンセプトにした、においが気にならないハードカプセルタイプ。
+              日本製・GMP認定工場製造・砂糖不使用。
+            </p>
+          </div>
+
+          <div class="pickup__cta">
+            <a class="btn" href={AGRELUX.couponShopUrl} target="_blank" rel="noopener noreferrer">
+              AGRelux 公式サイトへ
+            </a>
+            {AGRELUX.pressReleaseUrl ? (
+              <a class="btn btn-ghost" href={AGRELUX.pressReleaseUrl} target="_blank" rel="noopener noreferrer">
+                プレスリリースを読む
+              </a>
+            ) : (
+              <span class="pickup__pending">プレスリリース公開準備中</span>
+            )}
+          </div>
+
+          {AGRELUX.pressReleaseTitle && (
+            <p class="pickup__press">{AGRELUX.pressReleaseTitle}</p>
+          )}
+        </div>
+
+        {/* --- クーポン券 --- */}
+        <aside class="coupon" aria-label="AGRelux クーポン">
+          <div class="coupon__inner">
+            <p class="coupon__tag">SPECIAL COUPON</p>
+            <p class="coupon__for">明戸杯2026 視聴者の皆さまへ</p>
+
+            {hasCoupon ? (
+              <>
+                {AGRELUX.couponDiscount && <p class="coupon__off">{AGRELUX.couponDiscount}</p>}
+                <p class="coupon__label">クーポンコード</p>
+                <div class="coupon__code">
+                  <code id="coupon-code">{AGRELUX.couponCode}</code>
+                  <button class="coupon__copy" type="button" data-code={AGRELUX.couponCode}>コピー</button>
+                </div>
+                {AGRELUX.couponValidUntil && <p class="coupon__until">{AGRELUX.couponValidUntil}</p>}
+                <a class="btn btn-teal coupon__btn" href={AGRELUX.couponShopUrl} target="_blank" rel="noopener noreferrer">
+                  クーポンを使う
+                </a>
+              </>
+            ) : (
+              <>
+                <p class="coupon__off coupon__off--pending">COMING<br />SOON</p>
+                <p class="coupon__pending">
+                  スリーアール株式会社様よりクーポンコードを発行いただく予定です。<br />
+                  発行され次第、このスペースに掲載します。
+                </p>
+              </>
+            )}
+          </div>
+          <span class="coupon__notch coupon__notch--l" aria-hidden="true"></span>
+          <span class="coupon__notch coupon__notch--r" aria-hidden="true"></span>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.coupon__copy').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const code = btn.dataset.code ?? '';
+      try {
+        await navigator.clipboard.writeText(code);
+        const before = btn.textContent;
+        btn.textContent = 'コピーしました';
+        btn.classList.add('is-done');
+        setTimeout(() => {
+          btn.textContent = before;
+          btn.classList.remove('is-done');
+        }, 1800);
+      } catch {
+        /* クリップボード非対応環境では何もしない */
+      }
+    });
+  });
+</script>
+
+<style>
+  /* --- 協賛カード --- */
+  .sgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(1rem, 2.6vw, 1.6rem);
+  }
+  .scard {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 1rem;
+    padding: clamp(1.3rem, 3.2vw, 1.8rem);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .scard:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(30, 1, 10, 0.42); }
+  .scard__no {
+    position: absolute;
+    top: 0.7rem;
+    right: 1rem;
+    font-family: var(--font-en);
+    font-size: 1.9rem;
+    line-height: 1;
+    color: rgba(200, 16, 60, 0.16);
+  }
+  .scard__logo {
+    display: grid;
+    place-items: center;
+    padding: 0.5rem;
+    background: #fff;
+    border: 1px solid rgba(217, 164, 65, 0.55);
+    border-radius: 3px;
+  }
+  .scard__logo img { width: 100%; max-width: 300px; }
+  .scard__body { display: grid; align-content: start; gap: 0.65rem; }
+  .scard__name {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+    color: var(--c-crimson-deep);
+    line-height: 1.4;
+  }
+  .scard__offer {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.8;
+    color: var(--c-ink-soft);
+    padding-left: 0.8rem;
+    border-left: 3px solid rgba(14, 124, 110, 0.4);
+  }
+  .scard__links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem; margin-top: auto; padding-top: 0.4rem; }
+  .scard__site {
+    font-size: 0.85rem;
+    color: var(--c-teal-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    display: inline-flex;
+    gap: 0.3rem;
+  }
+  .scard__site:hover { color: var(--c-crimson); }
+
+  /* --- ピックアップ --- */
+  .pickup {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 2.8rem);
+    padding: clamp(1.6rem, 4.5vw, 2.8rem);
+    align-items: center;
+  }
+  .pickup__desc { margin: 1rem 0 1.4rem; font-size: 0.96rem; line-height: 1.95; color: rgba(251, 243, 226, 0.9); }
+  .pickup__zoniq {
+    padding: 1.1rem 1.3rem;
+    background: rgba(45, 2, 12, 0.4);
+    border: 1px solid rgba(217, 164, 65, 0.3);
+    border-radius: 3px;
+    margin-bottom: 1.5rem;
+  }
+  .pickup__zoniq h3 {
+    margin: 0 0 0.4rem;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: 1.02rem;
+    color: var(--c-gold-light);
+    letter-spacing: 0.06em;
+  }
+  .pickup__zoniq p { margin: 0; font-size: 0.87rem; line-height: 1.85; color: rgba(251, 243, 226, 0.82); }
+  .pickup__cta { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
+  .pickup__pending {
+    font-size: 0.84rem;
+    letter-spacing: 0.06em;
+    color: rgba(251, 243, 226, 0.55);
+    border: 1px dashed rgba(217, 164, 65, 0.45);
+    border-radius: 999px;
+    padding: 0.7rem 1.4rem;
+  }
+  .pickup__press { margin: 1rem 0 0; font-size: 0.88rem; color: var(--c-gold-light); }
+
+  /* --- クーポン --- */
+  .coupon {
+    position: relative;
+    background: linear-gradient(160deg, #fdf8ec, var(--c-paper) 55%, #f0e0c2);
+    border-radius: 5px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .coupon__inner {
+    position: relative;
+    margin: 9px;
+    padding: 1.6rem 1.3rem;
+    border: 2px dashed rgba(200, 16, 60, 0.42);
+    border-radius: 3px;
+    text-align: center;
+    color: var(--c-ink);
+  }
+  .coupon__tag {
+    margin: 0;
+    font-family: var(--font-en);
+    font-size: 0.66rem;
+    letter-spacing: 0.3em;
+    color: var(--c-teal-deep);
+  }
+  .coupon__for {
+    margin: 0.4rem 0 0.9rem;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: 0.93rem;
+    color: var(--c-crimson-deep);
+  }
+  .coupon__off {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-en);
+    font-size: clamp(2rem, 6vw, 2.8rem);
+    line-height: 1.05;
+    color: var(--c-crimson);
+    letter-spacing: 0.02em;
+  }
+  .coupon__off--pending { font-size: clamp(1.4rem, 4.5vw, 1.9rem); color: rgba(90, 43, 36, 0.35); }
+  .coupon__label { margin: 0 0 0.4rem; font-size: 0.76rem; letter-spacing: 0.16em; color: var(--c-ink-soft); }
+  .coupon__code {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.7rem;
+  }
+  .coupon__code code {
+    flex: 1;
+    padding: 0.6rem 0.8rem;
+    font-family: var(--font-en);
+    font-size: clamp(1rem, 3.4vw, 1.35rem);
+    letter-spacing: 0.16em;
+    background: rgba(45, 2, 12, 0.92);
+    color: var(--c-gold-light);
+    border-radius: 3px;
+  }
+  .coupon__copy {
+    flex: none;
+    padding: 0 0.9rem;
+    font-size: 0.8rem;
+    font-family: var(--font-gothic);
+    border: 1px solid var(--c-teal);
+    border-radius: 3px;
+    background: var(--c-teal);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .coupon__copy:hover { background: var(--c-teal-deep); }
+  .coupon__copy.is-done { background: var(--c-gold); border-color: var(--c-gold); color: #4a2606; }
+  .coupon__until { margin: 0 0 1rem; font-size: 0.78rem; color: var(--c-ink-soft); }
+  .coupon__btn { width: 100%; }
+  .coupon__pending { margin: 0; font-size: 0.85rem; line-height: 1.9; color: var(--c-ink-soft); }
+
+  .coupon__notch {
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #7d0722;
+    transform: translateY(-50%);
+  }
+  .coupon__notch--l { left: -10px; }
+  .coupon__notch--r { right: -10px; }
+
+  @media (max-width: 900px) {
+    .pickup { grid-template-columns: 1fr; }
+  }
+</style>

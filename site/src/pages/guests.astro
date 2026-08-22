@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PersonCard from '../components/PersonCard.astro';
+import { HOSTS, SUPPORTERS, COMMENTATORS, INVITED } from '../data/guests';
+---
+
+<Base
+  title="ゲスト・出演者"
+  pageTitle="ゲスト・出演者"
+  pageTitleEn="GUESTS"
+  pageLead={`主催・主催サポート・解説、そして招待枠${INVITED.length}名。麻雀好きのための秋の祭典に集う顔ぶれをご紹介します。`}
+>
+  {/* ===== 主催 ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead title="主催" en="ORGANIZER" />
+      <div class="feature">
+        {HOSTS.map((p) => <PersonCard person={p} featured />)}
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 主催サポート ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead title="主催サポート" en="SUPPORT" />
+      <div class="feature">
+        {SUPPORTERS.map((p) => <PersonCard person={p} featured />)}
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 解説 ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead title="解説" en="COMMENTARY" />
+      <div class="feature">
+        {COMMENTATORS.map((p) => <PersonCard person={p} featured showMeta />)}
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 招待枠 ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead
+        title="招待枠"
+        en="INVITED PLAYERS"
+        lead="明戸杯2026の卓を囲む招待枠メンバー。キャッチフレーズとともにご紹介します。"
+      />
+      <div class="grid">
+        {INVITED.map((p) => <PersonCard person={p} catchPlaceholder />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .feature { display: grid; gap: 1.2rem; max-width: 760px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: clamp(1rem, 2.4vw, 1.5rem);
+  }
+</style>

@@ -1,0 +1,242 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { RULE_SUMMARY, RULE_TABLE, RULE_TABLE_NOTE, PROHIBITIONS, PROHIBITION_NOTE } from '../data/rules';
+import { SCHEDULE } from '../data/schedule';
+import { withBase } from '../lib/path';
+
+const matches = SCHEDULE.filter((s) => s.kind === 'match');
+---
+
+<Base
+  title="ルール・禁止事項"
+  pageTitle="ルール・禁止事項"
+  pageTitleEn="RULES"
+  pageLead="明戸杯2026は雀魂 段位戦準拠の四人打ち麻雀トーナメントです。参加される皆さまは必ず一読ください。"
+>
+  {/* ===== ルール要約 ===== */}
+  <section class="section">
+    <div class="shell">
+      <div class="summary reveal">
+        {[
+          { k: '使用ルール', v: RULE_SUMMARY.base },
+          { k: '形式', v: RULE_SUMMARY.format },
+          { k: 'プラットフォーム', v: RULE_SUMMARY.platform },
+        ].map((s) => (
+          <div class="summary__cell">
+            <p class="summary__k">{s.k}</p>
+            <p class="summary__v">{s.v}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ===== トーナメント進行 ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead
+        title="トーナメント形式"
+        en="FORMAT"
+        lead="各卓 上位2名が勝ち上がる勝ち抜き方式。予選2回戦までは東風戦、予選3回戦から決勝までは半荘戦で行います。"
+      />
+
+      <ol class="rounds">
+        {matches.map((m, i) => (
+          <li class="rounds__item reveal">
+            <span class="rounds__no">{String(i + 1).padStart(2, '0')}</span>
+            <div class="rounds__body">
+              <h3>{m.title}</h3>
+              <p class="rounds__sub">{m.sub}</p>
+              {m.advance && <p class="rounds__adv">{m.advance}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="note" style="margin-top:1.5rem">
+        ※詳しい進行は<a href={withBase('schedule/')}>スケジュール</a>ページをご覧ください。
+      </p>
+    </div>
+  </section>
+
+  {/* ===== 詳細ルール表 ===== */}
+  <section class="section">
+    <div class="shell-narrow">
+      <SectionHead title="ルール詳細" en="DETAILS" />
+
+      <div class="washi corner-key ruletable reveal">
+        <table>
+          <tbody>
+            {RULE_TABLE.map((r) => (
+              <tr>
+                <th scope="row">{r.label}</th>
+                <td>{r.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="note ruletable__note">{RULE_TABLE_NOTE}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 禁止事項 ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead
+        title="禁止事項"
+        en="PROHIBITED"
+        lead="全員が気持ちよく楽しめる大会にするため、以下の行為を禁止します。"
+      />
+
+      <div class="prohibit">
+        {PROHIBITIONS.map((p) => (
+          <article class="prohibit__card reveal">
+            <span class="prohibit__mark" aria-hidden="true">禁</span>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <p class="note prohibit__note reveal">{PROHIBITION_NOTE}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* --- 要約 --- */
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: rgba(217, 164, 65, 0.35);
+    border: 1px solid rgba(217, 164, 65, 0.35);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .summary__cell {
+    padding: 1.5rem 1.4rem;
+    background: linear-gradient(160deg, rgba(163, 10, 46, 0.5), rgba(92, 5, 24, 0.72));
+    text-align: center;
+  }
+  .summary__k {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-en);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    color: var(--c-gold);
+  }
+  .summary__v {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.6vw, 1.2rem);
+    color: #fff;
+    line-height: 1.5;
+  }
+
+  /* --- ラウンド --- */
+  .rounds {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+  }
+  .rounds__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: center;
+    padding: 1.15rem 1.2rem;
+    background: linear-gradient(160deg, #106d61, #093f38);
+    border: 1px solid rgba(42, 165, 149, 0.7);
+    border-radius: 4px;
+  }
+  .rounds__no {
+    font-family: var(--font-en);
+    font-size: 1.7rem;
+    line-height: 1;
+    color: rgba(242, 216, 155, 0.55);
+  }
+  .rounds__body h3 {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: 1.08rem;
+    color: #fff;
+  }
+  .rounds__sub {
+    margin: 0.1rem 0 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    color: #a7ecdf;
+  }
+  .rounds__adv { margin: 0.35rem 0 0; font-size: 0.78rem; color: rgba(251, 243, 226, 0.7); }
+
+  /* --- ルール表 --- */
+  .ruletable { padding: clamp(1.4rem, 4vw, 2.2rem); }
+  .ruletable table { width: 100%; border-collapse: collapse; }
+  .ruletable th, .ruletable td {
+    padding: 0.85rem 0.4rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px dashed rgba(90, 43, 36, 0.22);
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+  .ruletable th {
+    width: 12em;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    color: var(--c-crimson-deep);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .ruletable tr:last-child th, .ruletable tr:last-child td { border-bottom: 0; }
+  .ruletable__note { margin: 1.3rem 0 0; }
+
+  /* --- 禁止事項 --- */
+  .prohibit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .prohibit__card {
+    position: relative;
+    padding: 1.5rem 1.5rem 1.4rem 3.9rem;
+    background: linear-gradient(160deg, rgba(92, 5, 24, 0.75), rgba(60, 3, 16, 0.85));
+    border: 1px solid rgba(240, 84, 106, 0.4);
+    border-left: 3px solid var(--c-rouge);
+    border-radius: 4px;
+  }
+  .prohibit__mark {
+    position: absolute;
+    left: 1.05rem;
+    top: 1.4rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--c-crimson);
+    border: 1px solid var(--c-rouge-light);
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #fff;
+  }
+  .prohibit__card h3 {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: 1.06rem;
+    color: var(--c-gold-light);
+    line-height: 1.45;
+  }
+  .prohibit__card p { margin: 0; font-size: 0.9rem; line-height: 1.85; color: rgba(251, 243, 226, 0.85); }
+  .prohibit__note { margin-top: 1.8rem; }
+</style>

@@ -1,0 +1,151 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../data/site';
+import { withBase } from '../lib/path';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** ページ最上部に大きな見出し帯を出す（ホーム以外） */
+  pageTitle?: string;
+  pageTitleEn?: string;
+  pageLead?: string;
+}
+
+const {
+  title,
+  description = SITE.description,
+  pageTitle,
+  pageTitleEn,
+  pageLead,
+} = Astro.props;
+
+const fullTitle = title ? `${title}｜${SITE.title}` : `${SITE.title}｜${SITE.tagline}`;
+const ogImage = new URL(withBase('assets/logo/logo-horizontal.png'), Astro.site ?? 'https://example.com').href;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {/* 背景パターンの URL を base パス込みで注入（GitHub Pages のサブパス対応） */}
+    <style is:inline set:html={`:root{--bg-pattern:url('${withBase('assets/bg/pattern-crimson.jpg')}')}`}></style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Cinzel:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a href="#main" class="sr-only">本文へスキップ</a>
+    <Header />
+
+    <main id="main">
+      {
+        pageTitle && (
+          <section class="page-head">
+            <div class="page-head__inner shell">
+              <p class="page-head__en">{pageTitleEn}</p>
+              <h1 class="page-head__title">{pageTitle}</h1>
+              {pageLead && <p class="page-head__lead">{pageLead}</p>}
+            </div>
+            <div class="page-head__rule" aria-hidden="true"></div>
+          </section>
+        )
+      }
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // スクロール連動フェードイン
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-in');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.06 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
+
+    <style>
+      .page-head {
+        position: relative;
+        padding: clamp(6.5rem, 13vw, 9rem) 0 clamp(2rem, 5vw, 3rem);
+        overflow: hidden;
+      }
+      .page-head::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(120% 90% at 12% 0%, rgba(240, 84, 106, 0.28), transparent 62%),
+          radial-gradient(90% 80% at 92% 20%, rgba(14, 124, 110, 0.3), transparent 60%);
+        pointer-events: none;
+      }
+      .page-head__inner { position: relative; }
+      .page-head__en {
+        font-family: var(--font-en);
+        font-size: 0.78rem;
+        letter-spacing: 0.42em;
+        color: var(--c-gold);
+        margin: 0 0 0.5rem;
+      }
+      .page-head__title {
+        font-family: var(--font-mincho);
+        font-weight: 800;
+        font-size: clamp(2rem, 6.5vw, 3.4rem);
+        line-height: 1.2;
+        margin: 0;
+        text-shadow: 0 3px 16px rgba(0, 0, 0, 0.45);
+      }
+      .page-head__title::after {
+        content: '';
+        display: block;
+        width: 68px;
+        height: 3px;
+        margin-top: 1.1rem;
+        background: linear-gradient(90deg, var(--c-gold), rgba(217, 164, 65, 0));
+      }
+      .page-head__lead {
+        max-width: 60ch;
+        margin: 1.3rem 0 0;
+        color: rgba(251, 243, 226, 0.84);
+        font-size: 0.98rem;
+      }
+      .page-head__rule {
+        margin-top: clamp(1.5rem, 4vw, 2.5rem);
+        height: 8px;
+        background:
+          repeating-linear-gradient(
+            90deg,
+            var(--c-gold) 0 14px,
+            transparent 14px 28px
+          );
+        opacity: 0.32;
+      }
+    </style>
+  </body>
+</html>

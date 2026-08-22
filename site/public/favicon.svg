@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="10" fill="#c8103c"/>
+  <rect x="14" y="9" width="36" height="46" rx="6" fill="#fbf3e2" stroke="#0e7c6e" stroke-width="2.5"/>
+  <text x="32" y="34" fill="#c8103c" font-size="30" font-weight="700" text-anchor="middle" dominant-baseline="central"
+        font-family="'Shippori Mincho B1','Hiragino Mincho ProN',serif">明</text>
+</svg>

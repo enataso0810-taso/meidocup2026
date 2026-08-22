@@ -1,0 +1,154 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PrizeCard from '../components/PrizeCard.astro';
+import { withBase } from '../lib/path';
+import {
+  RANK_PRIZES, RANK_PRIZES_NOTE, HOST_PRIZES, PERSONAL_PRIZES, INVITED_PRIZES, EXHIBITION_PRIZES,
+} from '../data/prizes';
+
+
+const totalCount =
+  RANK_PRIZES.length + HOST_PRIZES.length + PERSONAL_PRIZES.length +
+  INVITED_PRIZES.length + EXHIBITION_PRIZES.length;
+
+const jumps = [
+  { id: 'rank', label: '上位賞' },
+  { id: 'host', label: '主催賞' },
+  { id: 'personal', label: '個人協賛賞' },
+  { id: 'invited', label: '招待枠限定' },
+  { id: 'exhibition', label: 'エキシビジョン' },
+];
+---
+
+<Base
+  title="賞品"
+  pageTitle="賞品"
+  pageTitleEn="PRIZES"
+  pageLead={`企業協賛による上位賞から、主催賞・個人協賛賞まで全${totalCount}賞。卓上のドラマひとつひとつに賞品が用意されています。`}
+>
+  {/* ===== 目次 ===== */}
+  <section class="section">
+    <div class="shell">
+      <nav class="jump reveal" aria-label="賞品カテゴリ">
+        {jumps.map((j) => <a href={`#${j.id}`}>{j.label}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {/* ===== 上位賞 ===== */}
+  <section class="section" id="rank">
+    <div class="shell">
+      <SectionHead
+        title="上位賞"
+        en="TOP PRIZES"
+        lead="企業協賛による1位〜10位の賞品です。画像をクリックすると拡大表示できます。"
+      />
+      <div class="grid">
+        {RANK_PRIZES.map((p) => <PrizeCard prize={p} tone="gold" />)}
+      </div>
+      <p class="note grid__note reveal">{RANK_PRIZES_NOTE}</p>
+    </div>
+  </section>
+
+  {/* ===== 主催賞 ===== */}
+  <section class="section" id="host">
+    <div class="shell">
+      <SectionHead
+        title="主催賞"
+        en="HOST AWARDS"
+        lead="主催・明戸えな、主催サポート・おしたらあたるからの特別賞です。"
+      />
+      <div class="grid grid--wide">
+        {HOST_PRIZES.map((p) => <PrizeCard prize={p} tone="crimson" />)}
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 個人協賛賞 ===== */}
+  <section class="section" id="personal">
+    <div class="shell">
+      <SectionHead
+        title="個人協賛賞"
+        en="PERSONAL AWARDS"
+        lead="個人協賛者の皆さまからご提供いただいた賞品です。"
+      />
+      <div class="grid">
+        {PERSONAL_PRIZES.map((p) => <PrizeCard prize={p} tone="teal" />)}
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 招待枠限定 ===== */}
+  <section class="section" id="invited">
+    <div class="shell">
+      <SectionHead title="招待枠の方限定" en="INVITED ONLY" />
+      <div class="grid grid--wide">
+        {INVITED_PRIZES.map((p) => <PrizeCard prize={p} tone="teal" />)}
+      </div>
+    </div>
+  </section>
+
+  {/* ===== エキシビジョン ===== */}
+  <section class="section" id="exhibition">
+    <div class="shell">
+      <SectionHead
+        title="エキシビジョンマッチ企画の賞"
+        en="EXHIBITION AWARDS"
+        lead="秋のエキシビジョンマッチにまつわる3つの賞。ダービー賞は視聴者の皆さまも対象です。"
+      />
+      <div class="grid">
+        {EXHIBITION_PRIZES.map((p) => <PrizeCard prize={p} tone="crimson" />)}
+      </div>
+
+      <div class="cross reveal">
+        <p>投票方法・出演メンバーの詳細はエキシビジョンマッチのページへ。</p>
+        <a class="btn btn-teal" href={withBase('exhibition/')}>エキシビジョンマッチを見る</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 1rem 1.2rem;
+    background: rgba(45, 2, 12, 0.42);
+    border: 1px solid rgba(217, 164, 65, 0.32);
+    border-radius: 4px;
+  }
+  .jump a {
+    padding: 0.35rem 1.05rem;
+    font-size: 0.88rem;
+    letter-spacing: 0.06em;
+    border: 1px solid rgba(217, 164, 65, 0.45);
+    border-radius: 999px;
+    color: var(--c-gold-light);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .jump a:hover { background: var(--c-crimson); border-color: var(--c-rouge-light); color: #fff; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: clamp(1rem, 2.4vw, 1.6rem);
+  }
+  .grid--wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+  .grid__note { margin-top: 1.4rem; }
+
+  .cross {
+    margin-top: 2.4rem;
+    padding: 1.6rem 1.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    background: linear-gradient(160deg, #10786a, #0a4b43);
+    border: 1px solid rgba(42, 165, 149, 0.75);
+    border-radius: 4px;
+  }
+  .cross p { margin: 0; font-family: var(--font-mincho); font-size: 1rem; color: #d5f6ef; }
+</style>

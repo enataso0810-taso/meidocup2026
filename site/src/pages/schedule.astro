@@ -1,0 +1,262 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Countdown from '../components/Countdown.astro';
+import { SCHEDULE, SCHEDULE_NOTE } from '../data/schedule';
+import { EVENT } from '../data/site';
+
+const KIND_LABEL: Record<string, string> = {
+  standby: '待機',
+  ceremony: '開会式',
+  match: '対局',
+  break: '休憩',
+  exhibition: '特別企画',
+  award: '表彰式',
+};
+---
+
+<Base
+  title="スケジュール"
+  pageTitle="スケジュール"
+  pageTitleEn="SCHEDULE"
+  pageLead={`${EVENT.dateLabelJa}、${EVENT.timeLabel}。本会場（神視点）配信とともに一日をお楽しみください。`}
+>
+  {/* ===== カウントダウン ===== */}
+  <section class="section">
+    <div class="shell-narrow">
+      <div class="reveal">
+        <Countdown
+          target={EVENT.startsAt}
+          label="開幕まで"
+          sublabel={`${EVENT.dateLabelJa} 13:00 開会式スタート`}
+          finishedText="開幕！"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* ===== タイムライン ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead title="大会の流れ" en="TIMETABLE" />
+
+      <ol class="tl">
+        {SCHEDULE.map((s) => (
+          <li class:list={['tl__item', `is-${s.kind}`, 'reveal']}>
+            <div class="tl__time">
+              {s.time ? <span class="tl__clock">{s.time}</span> : <span class="tl__arrow" aria-hidden="true">▼</span>}
+            </div>
+
+            <div class="tl__marker" aria-hidden="true"><span></span></div>
+
+            <div class="tl__body">
+              <p class="tl__kind">{KIND_LABEL[s.kind]}</p>
+              <h3 class="tl__title">
+                {s.title}
+                {s.sub && <span class="tl__sub">{s.sub}</span>}
+              </h3>
+              {s.advance && <p class="tl__advance">{s.advance}</p>}
+              {s.detail && (
+                <ul class="tl__detail">
+                  {s.detail.map((d) => <li>{d}</li>)}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <p class="note tl__note reveal">{SCHEDULE_NOTE}</p>
+    </div>
+  </section>
+
+  {/* ===== トーナメント表（後日公開） ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead
+        title="トーナメント表"
+        en="BRACKET"
+        lead="組み合わせ抽選の結果が確定次第、こちらにトーナメント表を掲載します。"
+      />
+
+      <div class="bracket washi corner-key reveal">
+        <div class="bracket__ghost" aria-hidden="true">
+          {[0, 1, 2].map((col) => (
+            <div class="bracket__col">
+              {Array.from({ length: [4, 2, 1][col]! }).map(() => (
+                <div class="bracket__slot"><span></span><span></span></div>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        <div class="bracket__overlay">
+          <p class="ribbon ribbon-gold">COMING SOON</p>
+          <p class="bracket__msg">
+            トーナメント表は<strong>抽選後に公開</strong>いたします。<br />
+            決まり次第このスペースに掲載しますので、当日までお待ちください。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* --- タイムライン --- */
+  .tl { list-style: none; margin: 0; padding: 0; position: relative; }
+  .tl__item {
+    display: grid;
+    grid-template-columns: 7.5rem 2.4rem minmax(0, 1fr);
+    align-items: start;
+    padding-bottom: 1.4rem;
+  }
+  .tl__time { padding-top: 0.55rem; text-align: right; padding-right: 0.9rem; }
+  .tl__clock {
+    font-family: var(--font-en);
+    font-size: clamp(0.95rem, 2.4vw, 1.18rem);
+    letter-spacing: 0.06em;
+    color: var(--c-gold-light);
+    white-space: nowrap;
+  }
+  .tl__arrow { color: rgba(217, 164, 65, 0.4); font-size: 0.7rem; }
+
+  .tl__marker { position: relative; display: grid; justify-items: center; }
+  .tl__marker::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: -1.4rem;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(217, 164, 65, 0.55), rgba(217, 164, 65, 0.2));
+  }
+  .tl__item:last-child .tl__marker::before { display: none; }
+  .tl__marker span {
+    position: relative;
+    margin-top: 0.75rem;
+    width: 13px;
+    height: 13px;
+    border-radius: 2px;
+    transform: rotate(45deg);
+    background: var(--c-gold);
+    box-shadow: 0 0 0 4px rgba(92, 5, 24, 0.9), 0 0 14px rgba(242, 216, 155, 0.5);
+  }
+  .is-match .tl__marker span { background: var(--c-rouge); }
+  .is-exhibition .tl__marker span { background: var(--c-teal-light); width: 17px; height: 17px; }
+  .is-award .tl__marker span { background: var(--c-gold-light); width: 17px; height: 17px; }
+  .is-break .tl__marker span { background: rgba(251, 243, 226, 0.4); width: 9px; height: 9px; }
+
+  .tl__body {
+    margin-left: 0.6rem;
+    padding: 0.9rem 1.35rem 1.05rem;
+    background: linear-gradient(160deg, rgba(163, 10, 46, 0.42), rgba(92, 5, 24, 0.62));
+    border: 1px solid rgba(217, 164, 65, 0.32);
+    border-radius: 4px;
+  }
+  .is-match .tl__body { border-color: rgba(240, 84, 106, 0.45); }
+  .is-exhibition .tl__body {
+    background: linear-gradient(160deg, #10786a, #0a4b43);
+    border-color: rgba(42, 165, 149, 0.85);
+  }
+  .is-award .tl__body {
+    background: linear-gradient(160deg, #a8792a, #6d4a10);
+    border-color: rgba(242, 216, 155, 0.75);
+  }
+  .is-break .tl__body { background: rgba(45, 2, 12, 0.4); border-style: dashed; }
+
+  .tl__kind {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-en);
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    color: var(--c-gold);
+  }
+  .tl__title {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+    color: #fff;
+    line-height: 1.4;
+  }
+  .tl__sub {
+    padding: 0.1rem 0.7rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    border: 1px solid rgba(217, 164, 65, 0.6);
+    border-radius: 999px;
+    color: var(--c-gold-light);
+    font-weight: 700;
+  }
+  .tl__advance {
+    margin: 0.5rem 0 0;
+    display: inline-block;
+    padding: 0.12rem 0.75rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    background: rgba(14, 124, 110, 0.45);
+    border: 1px solid rgba(42, 165, 149, 0.55);
+    border-radius: 3px;
+    color: #c9f5ec;
+  }
+  .tl__detail { margin: 0.6rem 0 0; padding-left: 1.1rem; }
+  .tl__detail li { font-size: 0.88rem; line-height: 1.8; color: rgba(251, 243, 226, 0.82); }
+  .tl__note { margin-top: 1.6rem; }
+
+  /* --- トーナメント表プレースホルダー --- */
+  .bracket { position: relative; padding: clamp(2rem, 6vw, 3.5rem) clamp(1.2rem, 4vw, 3rem); overflow: hidden; }
+  .bracket__ghost {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 4vw, 2.5rem);
+    opacity: 0.28;
+    filter: blur(0.4px);
+  }
+  .bracket__col { display: grid; align-content: space-around; gap: 1rem; }
+  .bracket__slot {
+    display: grid;
+    gap: 0.4rem;
+    padding: 0.7rem 0.8rem;
+    border: 1px dashed rgba(90, 43, 36, 0.45);
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.35);
+  }
+  .bracket__slot span {
+    display: block;
+    height: 9px;
+    border-radius: 2px;
+    background: rgba(90, 43, 36, 0.28);
+  }
+  .bracket__slot span:last-child { width: 62%; }
+
+  .bracket__overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1rem;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(251, 243, 226, 0.55), rgba(251, 243, 226, 0.9));
+    padding: 1rem;
+  }
+  .bracket__msg {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-size: clamp(0.95rem, 2.6vw, 1.1rem);
+    line-height: 2;
+    color: var(--c-ink);
+  }
+  .bracket__msg strong { color: var(--c-crimson-deep); }
+
+  @media (max-width: 700px) {
+    .tl__item { grid-template-columns: 4.6rem 1.8rem minmax(0, 1fr); }
+    .tl__time { padding-right: 0.5rem; }
+    .tl__clock { font-size: 0.85rem; }
+    .tl__body { margin-left: 0.3rem; padding: 0.8rem 1rem 0.95rem; }
+  }
+</style>

@@ -1,0 +1,204 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PersonCard from '../components/PersonCard.astro';
+import PrizeCard from '../components/PrizeCard.astro';
+import Countdown from '../components/Countdown.astro';
+import { EXHIBITION_PLAYERS } from '../data/guests';
+import { EXHIBITION_PRIZES } from '../data/prizes';
+import { SITE, EXHIBITION_VOTE } from '../data/site';
+import { withBase } from '../lib/path';
+
+
+const intent = (name: string) =>
+  `https://x.com/intent/post?text=${encodeURIComponent(
+    `秋のエキシビジョンマッチ、1位予想は「${name}」！ ${SITE.hashtag}`
+  )}`;
+
+const steps = [
+  { n: '01', t: '出演メンバーから1位を予想', b: '下の4名から、エキシビジョンマッチで1位になると思う選手を選びます。' },
+  { n: '02', t: `${SITE.hashtag} を付けてポスト`, b: '誰に投票したかが分かるように、ハッシュタグを付けてXにポストしてください。' },
+  { n: '03', t: '締切までに投稿完了', b: `${EXHIBITION_VOTE.deadlineLabel}（${EXHIBITION_VOTE.note}）が締切です。` },
+  { n: '04', t: '的中者から抽選で1名', b: '見事的中した方の中から抽選で1名様に「山本の米 新米10kg」をプレゼント。' },
+];
+---
+
+<Base
+  title="秋のエキシビジョンマッチ"
+  pageTitle="秋のエキシビジョンマッチ"
+  pageTitleEn="EXHIBITION MATCH"
+  pageLead="明戸杯2026（主催・明戸えな）大会後半にてエキシビションマッチを企画！ 以下4名の鉄強雀士から、1位になる選手を予想して投票しよう！"
+>
+  {/* ===== 投票カウントダウン ===== */}
+  <section class="section">
+    <div class="shell">
+      <div class="votebar panel reveal">
+        <div class="votebar__lead">
+          <p class="ribbon">投票受付中</p>
+          <h2 class="votebar__title">1位を予想して<br /><span>山本の米 新米10kg</span>を当てよう</h2>
+          <p class="votebar__body">
+            見事的中した人の中から抽選で1名様に「山本の米 新米10kg」をプレゼント。
+            誰に投票したか、<a href={SITE.hashtagUrl} target="_blank" rel="noopener noreferrer">{SITE.hashtag}</a> のタグを付けてポストしてね！
+          </p>
+        </div>
+
+        <div class="votebar__cd">
+          <Countdown
+            target={EXHIBITION_VOTE.deadlineAt}
+            label="投票締め切りまで"
+            sublabel={EXHIBITION_VOTE.deadlineLabel}
+            finishedText="投票を締め切りました"
+            variant="teal"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 投票のしかた ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead title="投票のしかた" en="HOW TO VOTE" />
+      <ol class="steps">
+        {steps.map((s) => (
+          <li class="steps__item reveal">
+            <span class="steps__n">{s.n}</span>
+            <h3>{s.t}</h3>
+            <p>{s.b}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {/* ===== 出演メンバー ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead
+        title="出演メンバー"
+        en="PLAYERS"
+        lead="魂天4名による特別対局。名前の下のボタンから、その選手を1位予想としてポストできます。"
+      />
+
+      <div class="players">
+        {EXHIBITION_PLAYERS.map((p) => (
+          <div class="players__cell">
+            <PersonCard person={p} showMeta />
+            <a class="players__vote btn btn-teal" href={intent(p.name)} target="_blank" rel="noopener noreferrer">
+              {p.name}に投票
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <p class="note reveal" style="margin-top:1.6rem">
+        ※投票はXへのポストで受け付けます。ボタンを押すとポスト画面が開きます（内容は自由に編集できます）。
+      </p>
+    </div>
+  </section>
+
+  {/* ===== エキシビジョン関連の賞 ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead
+        title="エキシビジョンマッチの賞"
+        en="EXHIBITION AWARDS"
+        lead="この企画にまつわる3つの賞です。トーナメント本戦の賞品は賞品ページにまとめています。"
+      />
+      <div class="agrid">
+        {EXHIBITION_PRIZES.map((p) => <PrizeCard prize={p} tone="crimson" />)}
+      </div>
+
+      <div class="cross reveal">
+        <p>上位賞・主催賞・個人協賛賞など、その他すべての賞品はこちら。</p>
+        <a class="btn" href={withBase('prizes/')}>賞品一覧を見る</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* --- 投票バー --- */
+  .votebar {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    padding: clamp(1.7rem, 4.5vw, 2.8rem);
+  }
+  .votebar__title {
+    margin: 0.9rem 0 0.8rem;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.4rem, 4.4vw, 2.1rem);
+    line-height: 1.4;
+    color: #fff;
+  }
+  .votebar__title span { color: var(--c-gold-light); }
+  .votebar__body { margin: 0; font-size: 0.95rem; line-height: 1.95; color: rgba(251, 243, 226, 0.88); }
+  .votebar__body a { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* --- ステップ --- */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+    counter-reset: step;
+  }
+  .steps__item {
+    position: relative;
+    padding: 1.5rem 1.4rem 1.4rem;
+    background: linear-gradient(160deg, #106d61, #093f38);
+    border: 1px solid rgba(42, 165, 149, 0.7);
+    border-radius: 4px;
+  }
+  .steps__n {
+    font-family: var(--font-en);
+    font-size: 2.2rem;
+    line-height: 1;
+    color: rgba(242, 216, 155, 0.42);
+  }
+  .steps__item h3 {
+    margin: 0.5rem 0 0.5rem;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: 1.04rem;
+    line-height: 1.5;
+    color: #fff;
+  }
+  .steps__item p { margin: 0; font-size: 0.88rem; line-height: 1.85; color: rgba(251, 243, 226, 0.84); }
+
+  /* --- 出演メンバー --- */
+  .players {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: clamp(1rem, 2.4vw, 1.5rem);
+  }
+  .players__cell { display: grid; gap: 0.8rem; align-content: start; }
+  .players__vote { width: 100%; font-size: 0.92rem; padding: 0.7rem 1rem; }
+
+  .agrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: clamp(1rem, 2.4vw, 1.6rem);
+  }
+
+  .cross {
+    margin-top: 2.4rem;
+    padding: 1.6rem 1.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    background: linear-gradient(160deg, #a80c30, #6d0520);
+    border: 1px solid rgba(217, 164, 65, 0.6);
+    border-radius: 4px;
+  }
+  .cross p { margin: 0; font-family: var(--font-mincho); font-size: 1rem; color: var(--c-paper); }
+
+  @media (max-width: 900px) { .votebar { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,110 @@
+---
+import type { Prize } from '../data/prizes';
+import { withBase } from '../lib/path';
+interface Props { prize: Prize; tone?: 'gold' | 'teal' | 'crimson'; }
+const { prize, tone = 'gold' } = Astro.props;
+const img = prize.image ? withBase(`assets/prizes/${prize.image}`) : null;
+---
+
+<article class:list={['prize', `prize--${tone}`, 'reveal']}>
+  {img && (
+    <a class="prize__media" href={img} target="_blank" rel="noopener noreferrer" aria-label={`${prize.title ?? prize.rank} の紹介画像を開く`}>
+      <img src={img} alt={`${prize.title ?? prize.rank}：${prize.item}`} width="1600" height="900" loading="lazy" decoding="async" />
+      <span class="prize__zoom" aria-hidden="true">拡大</span>
+    </a>
+  )}
+
+  <div class="prize__body">
+    <div class="prize__head">
+      <span class="prize__rank">{prize.rank}</span>
+      {prize.title && <h3 class="prize__title">{prize.title}</h3>}
+    </div>
+
+    <p class="prize__item">{prize.item}</p>
+    {prize.condition && (
+      <p class="prize__cond"><span>条件</span>{prize.condition}</p>
+    )}
+    {prize.note && <p class="prize__note">{prize.note}</p>}
+    <p class="prize__sponsor"><span>協賛</span>{prize.sponsor}</p>
+  </div>
+</article>
+
+<style>
+  .prize {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: linear-gradient(160deg, #fdf8ec 0%, var(--c-paper) 50%, #f2e4cb 100%);
+    color: var(--c-ink);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(217, 164, 65, 0.7);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .prize:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(30, 1, 10, 0.42); }
+
+  .prize__media { position: relative; display: block; background: #2d020c; overflow: hidden; }
+  .prize__media img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1); }
+  .prize__media:hover img { transform: scale(1.04); }
+  .prize__zoom {
+    position: absolute;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    padding: 0.18rem 0.7rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    border-radius: 999px;
+    background: rgba(45, 2, 12, 0.72);
+    color: var(--c-gold-light);
+    border: 1px solid rgba(217, 164, 65, 0.5);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .prize__media:hover .prize__zoom { opacity: 1; }
+
+  .prize__body { padding: 1.25rem 1.4rem 1.5rem; display: grid; align-content: start; gap: 0.6rem; }
+
+  .prize__head { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .prize__rank {
+    flex: none;
+    padding: 0.25rem 1.25rem 0.25rem 0.85rem;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    color: #4a2606;
+    background: linear-gradient(100deg, #e8c274, var(--c-gold));
+    clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%);
+  }
+  .prize--teal .prize__rank { background: linear-gradient(100deg, var(--c-teal), var(--c-teal-light)); color: #eafaf6; }
+  .prize--crimson .prize__rank { background: linear-gradient(100deg, var(--c-crimson), var(--c-rouge)); color: #fff; }
+
+  .prize__title {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.05rem, 2.6vw, 1.24rem);
+    color: var(--c-crimson-deep);
+    line-height: 1.35;
+  }
+  .prize__item { margin: 0; font-size: 0.95rem; line-height: 1.75; font-weight: 500; }
+  .prize__cond, .prize__sponsor {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--c-ink-soft);
+  }
+  .prize__cond span, .prize__sponsor span {
+    display: inline-block;
+    margin-right: 0.6rem;
+    padding: 0.02rem 0.55rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    border-radius: 2px;
+    background: rgba(14, 124, 110, 0.14);
+    color: var(--c-teal-deep);
+    border: 1px solid rgba(14, 124, 110, 0.3);
+  }
+  .prize__sponsor span { background: rgba(200, 16, 60, 0.1); color: var(--c-crimson-deep); border-color: rgba(200, 16, 60, 0.26); }
+  .prize__note { margin: 0; font-size: 0.8rem; line-height: 1.7; color: var(--c-ink-soft); }
+</style>

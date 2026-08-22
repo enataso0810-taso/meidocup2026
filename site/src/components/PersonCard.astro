@@ -1,0 +1,145 @@
+---
+import SnsLinks from './SnsLinks.astro';
+import type { Person } from '../data/guests';
+import { withBase } from '../lib/path';
+
+interface Props {
+  person: Person;
+  /** 主催などを大きく見せる */
+  featured?: boolean;
+  /** 所属・段位を表示 */
+  showMeta?: boolean;
+  /** キャッチフレーズ未提出のとき「Coming Soon」を表示する（招待枠のみ） */
+  catchPlaceholder?: boolean;
+}
+const { person, featured = false, showMeta = false, catchPlaceholder = false } = Astro.props;
+const img = withBase(`assets/guests/${person.image}`);
+---
+
+<article class:list={['pcard', { 'pcard--featured': featured }, 'reveal']}>
+  <div class="pcard__frame">
+    <img class="pcard__img" src={img} alt={person.name} width="400" height="400" loading="lazy" decoding="async" />
+    {person.role && <span class="pcard__role">{person.role}</span>}
+  </div>
+
+  <div class="pcard__body">
+    <h3 class="pcard__name">{person.name}</h3>
+
+    {showMeta && (person.affiliation || person.rank) && (
+      <p class="pcard__meta">
+        {person.affiliation}
+        {person.rank && <span class="pcard__rank">{person.rank}</span>}
+      </p>
+    )}
+
+    {person.catch ? (
+      <p class="pcard__catch">{person.catch}</p>
+    ) : catchPlaceholder ? (
+      <p class="pcard__catch pcard__catch--tbd">キャッチフレーズ Coming Soon</p>
+    ) : null}
+
+    <SnsLinks x={person.x} youtube={person.youtube} name={person.name} />
+  </div>
+</article>
+
+<style>
+  .pcard {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: linear-gradient(165deg, rgba(163, 10, 46, 0.55), rgba(92, 5, 24, 0.72));
+    border: 1px solid rgba(217, 164, 65, 0.42);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+  }
+  .pcard:hover {
+    transform: translateY(-6px);
+    border-color: var(--c-gold);
+    box-shadow: 0 16px 38px rgba(30, 1, 10, 0.5);
+  }
+
+  .pcard__frame {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: radial-gradient(120% 120% at 50% 20%, rgba(240, 84, 106, 0.35), rgba(60, 3, 16, 0.9));
+  }
+  .pcard__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .pcard:hover .pcard__img { transform: scale(1.06); }
+  .pcard__frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 -46px 46px -20px rgba(60, 3, 16, 0.9);
+    pointer-events: none;
+  }
+  .pcard__role {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    padding: 0.3rem 1.15rem 0.3rem 0.75rem;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    color: var(--c-gold-pale);
+    background: linear-gradient(100deg, var(--c-teal-deep), var(--c-teal));
+    clip-path: polygon(0 0, 100% 0, calc(100% - 11px) 100%, 0 100%);
+  }
+
+  .pcard__body { padding: 1rem 1.15rem 1.3rem; display: grid; align-content: start; gap: 0.5rem; }
+  .pcard__name {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.05rem, 2.6vw, 1.28rem);
+    letter-spacing: 0.06em;
+    color: #fff;
+    line-height: 1.35;
+  }
+  .pcard__meta {
+    margin: 0;
+    font-size: 0.76rem;
+    line-height: 1.6;
+    color: rgba(251, 243, 226, 0.72);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .pcard__rank {
+    padding: 0.05rem 0.6rem;
+    border: 1px solid var(--c-gold);
+    border-radius: 999px;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    color: var(--c-gold-light);
+    letter-spacing: 0.1em;
+  }
+  .pcard__catch {
+    margin: 0;
+    min-height: 1.7em;
+    font-family: var(--font-mincho);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--c-gold-light);
+  }
+  .pcard__catch--tbd { color: rgba(251, 243, 226, 0.4); font-size: 0.8rem; font-style: italic; }
+
+  .pcard--featured { grid-template-columns: minmax(0, 200px) minmax(0, 1fr); grid-template-rows: 1fr; }
+  .pcard--featured .pcard__frame { aspect-ratio: auto; height: 100%; min-height: 200px; }
+  .pcard--featured .pcard__body { padding: 1.6rem 1.8rem; align-content: center; gap: 0.7rem; }
+  .pcard--featured .pcard__name { font-size: clamp(1.4rem, 4vw, 1.9rem); }
+
+  @media (max-width: 640px) {
+    .pcard--featured { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .pcard--featured .pcard__frame { aspect-ratio: 16 / 10; min-height: 0; }
+  }
+</style>

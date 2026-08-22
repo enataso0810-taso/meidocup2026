@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import SnsLinks from '../components/SnsLinks.astro';
+import { CREATORS } from '../data/creators';
+import { withBase } from '../lib/path';
+---
+
+<Base
+  title="クリエイター紹介"
+  pageTitle="クリエイター紹介"
+  pageTitleEn="CREATORS"
+  pageLead="明戸杯2026のビジュアル・楽曲・サイトを手がけたクリエイターの皆さまです。"
+>
+  <section class="section">
+    <div class="shell">
+      <div class="cgrid">
+        {CREATORS.map((c) => (
+          <article class="ccard washi corner-key reveal">
+            <div class="ccard__top">
+              <img
+                class="ccard__img"
+                src={withBase(`assets/creators/${c.image}`)}
+                alt={c.name}
+                width="400"
+                height="400"
+                loading="lazy"
+                decoding="async"
+              />
+              <div>
+                <p class="ccard__role">{c.role}</p>
+                <h2 class="ccard__name">{c.name}</h2>
+              </div>
+            </div>
+
+            <SnsLinks x={c.x} site={c.link} siteLabel={c.linkLabel} name={c.name} onPaper />
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(1rem, 2.6vw, 1.6rem);
+  }
+  .ccard {
+    display: grid;
+    align-content: start;
+    gap: 1.2rem;
+    padding: clamp(1.4rem, 3.4vw, 1.9rem);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .ccard:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(30, 1, 10, 0.42); }
+  .ccard__top { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.1rem; align-items: center; }
+  .ccard__img {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--c-gold);
+    box-shadow: 0 4px 14px rgba(60, 4, 18, 0.28);
+  }
+  .ccard__role {
+    margin: 0 0 0.25rem;
+    display: inline-block;
+    padding: 0.1rem 0.7rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    border-radius: 2px;
+    background: rgba(14, 124, 110, 0.14);
+    border: 1px solid rgba(14, 124, 110, 0.32);
+    color: var(--c-teal-deep);
+  }
+  .ccard__name {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.15rem, 3vw, 1.4rem);
+    color: var(--c-crimson-deep);
+    line-height: 1.35;
+  }
+</style>

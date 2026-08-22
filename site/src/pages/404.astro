@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/path';
+---
+<Base title="ページが見つかりません">
+  <section class="section nf">
+    <div class="shell-narrow">
+      <p class="nf__code">404</p>
+      <h1 class="nf__title">お探しのページは<br />見つかりませんでした</h1>
+      <p class="nf__body">URLが変更されたか、削除された可能性があります。</p>
+      <a class="btn" href={withBase('')}>ホームへ戻る</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { padding-top: clamp(9rem, 18vw, 13rem); text-align: center; }
+  .nf__code {
+    margin: 0;
+    font-family: var(--font-en);
+    font-size: clamp(4rem, 16vw, 8rem);
+    line-height: 1;
+    color: rgba(242, 216, 155, 0.3);
+  }
+  .nf__title {
+    margin: 0.6rem 0 1rem;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    line-height: 1.5;
+  }
+  .nf__body { margin: 0 0 2rem; color: rgba(251, 243, 226, 0.78); }
+</style>
