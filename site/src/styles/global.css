@@ -122,7 +122,8 @@ a:hover { color: #fff; }
   white-space: nowrap;
 }
 .sect-lead {
-  max-width: 62ch;
+  /* 日本語は全角のため ch ではなく em で行長を決める（約38文字/行） */
+  max-width: 38em;
   margin: -1.4rem 0 2.6rem;
   color: rgba(251,243,226,.82);
   font-size: .97rem;

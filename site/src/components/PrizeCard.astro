@@ -4,14 +4,22 @@ import { withBase } from '../lib/path';
 interface Props { prize: Prize; tone?: 'gold' | 'teal' | 'crimson'; }
 const { prize, tone = 'gold' } = Astro.props;
 const img = prize.image ? withBase(`assets/prizes/${prize.image}`) : null;
+const bonus = prize.bonusImage ? withBase(`assets/prizes/${prize.bonusImage}`) : null;
 ---
 
 <article class:list={['prize', `prize--${tone}`, 'reveal']}>
   {img && (
     <a class="prize__media" href={img} target="_blank" rel="noopener noreferrer" aria-label={`${prize.title ?? prize.rank} の紹介画像を開く`}>
-      <img src={img} alt={`${prize.title ?? prize.rank}：${prize.item}`} width="1600" height="900" loading="lazy" decoding="async" />
+      <img src={img} alt={`${prize.title ?? prize.rank}：${prize.item}`} width="1400" height="788" loading="lazy" decoding="async" />
       <span class="prize__zoom" aria-hidden="true">拡大</span>
     </a>
+  )}
+
+  {bonus && (
+    <div class="prize__bonus">
+      <img src={bonus} alt={prize.bonusLabel ?? '副賞'} width="620" height="866" loading="lazy" decoding="async" />
+      <p><span>副賞</span>{prize.bonusLabel}</p>
+    </div>
   )}
 
   <div class="prize__body">
@@ -32,7 +40,7 @@ const img = prize.image ? withBase(`assets/prizes/${prize.image}`) : null;
 <style>
   .prize {
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto 1fr;
     background: linear-gradient(160deg, #fdf8ec 0%, var(--c-paper) 50%, #f2e4cb 100%);
     color: var(--c-ink);
     border-radius: 4px;
@@ -61,6 +69,40 @@ const img = prize.image ? withBase(`assets/prizes/${prize.image}`) : null;
     transition: opacity 0.25s ease;
   }
   .prize__media:hover .prize__zoom { opacity: 1; }
+
+  /* --- 副賞（トロフィーアクキー） --- */
+  .prize__bonus {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.4rem;
+    background: linear-gradient(100deg, rgba(217, 164, 65, 0.24), rgba(217, 164, 65, 0.06));
+    border-bottom: 1px solid rgba(217, 164, 65, 0.5);
+  }
+  .prize__bonus img {
+    flex: none;
+    width: 54px;
+    height: 76px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 8px rgba(90, 43, 36, 0.3));
+  }
+  .prize__bonus p {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--c-ink);
+  }
+  .prize__bonus span {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-family: var(--font-gothic);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: #8a6a1e;
+  }
 
   .prize__body { padding: 1.25rem 1.4rem 1.5rem; display: grid; align-content: start; gap: 0.6rem; }
 

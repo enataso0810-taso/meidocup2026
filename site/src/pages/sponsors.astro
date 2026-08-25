@@ -26,8 +26,8 @@ const hasCoupon = AGRELUX.couponCode !== '';
               <img
                 src={withBase(`assets/sponsors/${s.logo}`)}
                 alt={s.name}
-                width="480"
-                height="240"
+                width="560"
+                height="220"
                 loading="lazy"
                 decoding="async"
               />
@@ -58,21 +58,40 @@ const hasCoupon = AGRELUX.couponCode !== '';
       <SectionHead
         title="スリーアール株式会社様"
         en="PICK UP SPONSOR"
-        lead="1位賞品のゲーミングチェア「AGRelux」、および集中してたで賞の「ZONIQ」をご提供いただいています。"
+        lead="1位賞品のゲーミングチェア「AGRelux」、および集中してたで賞の「ZONIQ」をご提供いただいております。"
       />
 
       <div class="pickup panel reveal">
         <div class="pickup__main">
-          <p class="ribbon">AGRelux（アグリラックス）</p>
-          <p class="pickup__desc">{AGRELUX.pressReleaseSummary}</p>
+          <div class="pickup__brand">
+            <img
+              class="pickup__logo"
+              src={withBase(`assets/sponsors/${AGRELUX.logo}`)}
+              alt={AGRELUX.brand}
+              width="560"
+              height="200"
+              loading="lazy"
+              decoding="async"
+            />
+            <p class="pickup__tagline">
+              {AGRELUX.tagline}<span>{AGRELUX.concept}</span>
+            </p>
+          </div>
+
+          {AGRELUX.intro.map((para) => <p class="pickup__desc">{para}</p>)}
 
           <div class="pickup__zoniq">
-            <h3>ZONIQ（ゾニック）</h3>
-            <p>
-              AGReluxが手がける集中系サプリメント（一般食品）。カフェインとロディオラを配合し、
-              「オンに切り替えたい時の集中サポート」をコンセプトにした、においが気にならないハードカプセルタイプ。
-              日本製・GMP認定工場製造・砂糖不使用。
-            </p>
+            <img
+              class="pickup__zoniq-logo"
+              src={withBase(`assets/sponsors/${AGRELUX.zoniqLogo}`)}
+              alt="ZONIQ"
+              width="400"
+              height="140"
+              loading="lazy"
+              decoding="async"
+            />
+            <p>{AGRELUX.zoniqIntro}</p>
+            <p class="pickup__zoniq-catch">{AGRELUX.zoniqCatch}</p>
           </div>
 
           <div class="pickup__cta">
@@ -183,7 +202,12 @@ const hasCoupon = AGRELUX.couponCode !== '';
     border: 1px solid rgba(217, 164, 65, 0.55);
     border-radius: 3px;
   }
-  .scard__logo img { width: 100%; max-width: 300px; }
+  .scard__logo img {
+    width: 100%;
+    max-width: 300px;
+    height: 110px;
+    object-fit: contain;
+  }
   .scard__body { display: grid; align-content: start; gap: 0.65rem; }
   .scard__name {
     margin: 0;
@@ -215,12 +239,52 @@ const hasCoupon = AGRELUX.couponCode !== '';
   /* --- ピックアップ --- */
   .pickup {
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
     gap: clamp(1.5rem, 4vw, 2.8rem);
     padding: clamp(1.6rem, 4.5vw, 2.8rem);
-    align-items: center;
+    align-items: start;
   }
-  .pickup__desc { margin: 1rem 0 1.4rem; font-size: 0.96rem; line-height: 1.95; color: rgba(251, 243, 226, 0.9); }
+
+  .pickup__brand {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.1rem 1.5rem;
+    padding-bottom: 1.2rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(217, 164, 65, 0.3);
+  }
+  .pickup__logo {
+    width: clamp(150px, 26vw, 210px);
+    height: auto;
+    padding: 0.6rem 0.9rem;
+    background: var(--c-paper);
+    border-radius: 3px;
+    border: 1px solid rgba(217, 164, 65, 0.5);
+  }
+  .pickup__tagline {
+    margin: 0;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+    letter-spacing: 0.08em;
+    color: var(--c-gold-light);
+    line-height: 1.5;
+  }
+  .pickup__tagline span {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.86em;
+    color: rgba(251, 243, 226, 0.72);
+  }
+
+  .pickup__desc {
+    margin: 0 0 0.9rem;
+    font-size: 0.94rem;
+    line-height: 2;
+    color: rgba(251, 243, 226, 0.9);
+  }
+  .pickup__desc:last-of-type { margin-bottom: 1.5rem; }
   .pickup__zoniq {
     padding: 1.1rem 1.3rem;
     background: rgba(45, 2, 12, 0.4);
@@ -228,15 +292,18 @@ const hasCoupon = AGRELUX.couponCode !== '';
     border-radius: 3px;
     margin-bottom: 1.5rem;
   }
-  .pickup__zoniq h3 {
-    margin: 0 0 0.4rem;
-    font-family: var(--font-mincho);
-    font-weight: 800;
-    font-size: 1.02rem;
-    color: var(--c-gold-light);
-    letter-spacing: 0.06em;
+  .pickup__zoniq-logo {
+    width: clamp(110px, 20vw, 150px);
+    height: auto;
+    margin-bottom: 0.8rem;
   }
-  .pickup__zoniq p { margin: 0; font-size: 0.87rem; line-height: 1.85; color: rgba(251, 243, 226, 0.82); }
+  .pickup__zoniq p { margin: 0; font-size: 0.87rem; line-height: 1.9; color: rgba(251, 243, 226, 0.82); }
+  .pickup__zoniq-catch {
+    margin-top: 0.7rem !important;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    color: var(--c-gold-light) !important;
+  }
   .pickup__cta { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
   .pickup__pending {
     font-size: 0.84rem;

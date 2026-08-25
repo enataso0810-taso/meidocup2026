@@ -23,7 +23,7 @@ const {
 } = Astro.props;
 
 const fullTitle = title ? `${title}｜${SITE.title}` : `${SITE.title}｜${SITE.tagline}`;
-const ogImage = new URL(withBase('assets/logo/logo-horizontal.png'), Astro.site ?? 'https://example.com').href;
+const ogImage = new URL(withBase('assets/ogp/ogp.jpg'), Astro.site ?? 'https://example.com').href;
 ---
 
 <!doctype html>
@@ -130,10 +130,12 @@ const ogImage = new URL(withBase('assets/logo/logo-horizontal.png'), Astro.site 
         background: linear-gradient(90deg, var(--c-gold), rgba(217, 164, 65, 0));
       }
       .page-head__lead {
-        max-width: 60ch;
+        max-width: 40em;
         margin: 1.3rem 0 0;
         color: rgba(251, 243, 226, 0.84);
         font-size: 0.98rem;
+        /* 原稿どおりの改行位置を保つ */
+        white-space: pre-line;
       }
       .page-head__rule {
         margin-top: clamp(1.5rem, 4vw, 2.5rem);

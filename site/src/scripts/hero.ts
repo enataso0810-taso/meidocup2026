@@ -1,6 +1,6 @@
 /* ===========================================================================
    明戸杯2026 ─ ホーム ヒーロー WebGL 演出
-   ・麻雀牌がゆっくり舞う／金の粒子／梅の花びら
+   ・麻雀牌がゆっくり舞う／金の粒子／紅葉（もみじ・銀杏）
    ・prefers-reduced-motion / WebGL非対応 の場合は静止表示にフォールバック
    =========================================================================== */
 import * as THREE from 'three';
@@ -93,28 +93,88 @@ function finishTexture(cv: HTMLCanvasElement): THREE.CanvasTexture {
   return tex;
 }
 
-/** 梅の花びら（5弁の花）テクスチャ */
-function makePetalTexture(): THREE.CanvasTexture {
-  const s = 128;
+/** 紅葉（もみじ／銀杏）テクスチャ。秋らしい紅〜橙〜金のグラデーションで描く */
+function makeLeafTexture(kind: 'momiji' | 'icho', color: string, edge: string): THREE.CanvasTexture {
+  const s = 160;
   const cv = document.createElement('canvas');
   cv.width = cv.height = s;
   const g = cv.getContext('2d')!;
   g.translate(s / 2, s / 2);
-  g.fillStyle = '#fff6f1';
-  for (let i = 0; i < 5; i++) {
-    g.rotate((Math.PI * 2) / 5);
+
+  const grad = g.createLinearGradient(0, -s / 2, 0, s / 2);
+  grad.addColorStop(0, color);
+  grad.addColorStop(1, edge);
+
+  if (kind === 'momiji') {
+    // もみじ：5枚の切れ込みのある葉
+    g.fillStyle = grad;
     g.beginPath();
-    g.ellipse(0, -26, 17, 24, 0, 0, Math.PI * 2);
+    for (let i = 0; i < 5; i++) {
+      const a = -Math.PI / 2 + (i - 2) * 0.62;
+      const len = i === 2 ? 62 : i === 1 || i === 3 ? 56 : 44;
+      const wide = 0.2;
+      g.moveTo(0, 8);
+      g.lineTo(Math.cos(a - wide) * len * 0.62, Math.sin(a - wide) * len * 0.62);
+      g.lineTo(Math.cos(a) * len, Math.sin(a) * len);
+      g.lineTo(Math.cos(a + wide) * len * 0.62, Math.sin(a + wide) * len * 0.62);
+      g.closePath();
+    }
     g.fill();
+    // 葉柄
+    g.strokeStyle = edge;
+    g.lineWidth = 4;
+    g.beginPath();
+    g.moveTo(0, 8);
+    g.lineTo(0, 46);
+    g.stroke();
+    // 葉脈
+    g.strokeStyle = 'rgba(255,255,255,.32)';
+    g.lineWidth = 2;
+    for (let i = 0; i < 5; i++) {
+      const a = -Math.PI / 2 + (i - 2) * 0.62;
+      const len = i === 2 ? 54 : i === 1 || i === 3 ? 48 : 38;
+      g.beginPath();
+      g.moveTo(0, 6);
+      g.lineTo(Math.cos(a) * len, Math.sin(a) * len);
+      g.stroke();
+    }
+  } else {
+    // 銀杏：扇形の葉
+    g.fillStyle = grad;
+    g.beginPath();
+    g.moveTo(0, 34);
+    g.arc(0, 34, 56, -Math.PI * 0.86, -Math.PI * 0.14);
+    g.closePath();
+    g.fill();
+    // 中央の切れ込み
+    g.globalCompositeOperation = 'destination-out';
+    g.beginPath();
+    g.moveTo(0, 34);
+    g.lineTo(-7, -14);
+    g.lineTo(7, -14);
+    g.closePath();
+    g.fill();
+    g.globalCompositeOperation = 'source-over';
+    g.strokeStyle = edge;
+    g.lineWidth = 4;
+    g.beginPath();
+    g.moveTo(0, 34);
+    g.lineTo(0, 62);
+    g.stroke();
   }
-  g.beginPath();
-  g.arc(0, 0, 15, 0, Math.PI * 2);
-  g.fillStyle = '#ffd9c9';
-  g.fill();
-  const tex = new THREE.CanvasTexture(cv);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
+
+  return finishTexture(cv);
 }
+
+/** 舞い散る葉のバリエーション（紅→橙→金） */
+const LEAF_VARIANTS: Array<['momiji' | 'icho', string, string]> = [
+  ['momiji', '#e8434a', '#a3122a'],
+  ['momiji', '#f07a2a', '#c2431a'],
+  ['momiji', '#d4232f', '#7d0722'],
+  ['icho', '#f5c542', '#c98c1c'],
+  ['icho', '#ffd97a', '#d9a441'],
+  ['momiji', '#ff9a4d', '#d4512a'],
+];
 
 /** 丸いソフト粒子テクスチャ */
 function makeSparkTexture(): THREE.CanvasTexture {
@@ -214,26 +274,31 @@ export function initHero(canvas: HTMLCanvasElement): () => void {
     });
   }
 
-  /* --- 梅の花びら --- */
-  const petalTex = makePetalTexture();
-  disposables.push(petalTex);
-  const petalGeo = new THREE.PlaneGeometry(1, 1);
-  const petalMat = new THREE.MeshBasicMaterial({
-    map: petalTex, transparent: true, opacity: 0.9, depthWrite: false, side: THREE.DoubleSide,
+  /* --- 紅葉（もみじ・銀杏） --- */
+  const leafGeo = new THREE.PlaneGeometry(1, 1);
+  disposables.push(leafGeo);
+  const leafMats = LEAF_VARIANTS.map(([kind, color, edge]) => {
+    const tex = makeLeafTexture(kind, color, edge);
+    const mat = new THREE.MeshBasicMaterial({
+      map: tex, transparent: true, opacity: 0.95, depthWrite: false, side: THREE.DoubleSide,
+    });
+    disposables.push(tex, mat);
+    return mat;
   });
-  disposables.push(petalGeo, petalMat);
 
-  for (let i = 0; i < 26; i++) {
-    const mesh = new THREE.Mesh(petalGeo, petalMat);
-    mesh.position.set((Math.random() - 0.5) * 44, (Math.random() - 0.5) * 30, -2 - Math.random() * 20);
-    mesh.rotation.z = Math.random() * Math.PI;
-    mesh.scale.setScalar(0.35 + Math.random() * 0.6);
+  for (let i = 0; i < 30; i++) {
+    const mesh = new THREE.Mesh(leafGeo, leafMats[i % leafMats.length]!);
+    mesh.position.set((Math.random() - 0.5) * 46, (Math.random() - 0.5) * 32, -2 - Math.random() * 20);
+    // ほぼ正面を向かせつつ、ゆるやかに傾ける（真横を向いて消えないように）
+    mesh.rotation.set((Math.random() - 0.5) * 0.9, (Math.random() - 0.5) * 0.9, Math.random() * Math.PI * 2);
+    mesh.scale.setScalar(1.1 + Math.random() * 1.5);
     scene.add(mesh);
     floaters.push({
       mesh,
-      spin: new THREE.Vector3(0, 0, (Math.random() - 0.5) * 0.6),
-      rise: -(0.35 + Math.random() * 0.55),
-      sway: 1.4 + Math.random() * 1.8,
+      // 落ち葉らしく、ひらひらと軸回転しながら舞い降りる
+      spin: new THREE.Vector3((Math.random() - 0.5) * 0.35, (Math.random() - 0.5) * 0.55, (Math.random() - 0.5) * 0.8),
+      rise: -(0.45 + Math.random() * 0.7),
+      sway: 1.6 + Math.random() * 2.2,
       phase: Math.random() * Math.PI * 2,
       baseX: mesh.position.x,
     });

@@ -1,5 +1,6 @@
 ---
 import { SITE, EVENT } from '../data/site';
+import { HOSTS, SUPPORTERS } from '../data/guests';
 import { withBase } from '../lib/path';
 ---
 
@@ -17,10 +18,10 @@ import { withBase } from '../lib/path';
 
     <h1 class="hero__logo">
       <img
-        src={withBase('assets/logo/logo-main.png')}
+        src={withBase('assets/logo/logo-main.webp')}
         alt={SITE.title}
         width="1000"
-        height="717"
+        height="726"
         fetchpriority="high"
       />
       <span class="sr-only">{SITE.title}</span>
@@ -33,7 +34,10 @@ import { withBase } from '../lib/path';
     </p>
 
     <p class="hero__sub">
-      招待制 四人打ち麻雀トーナメント　／　主催：{SITE.organizer}
+      招待制 四人打ち麻雀トーナメント
+      <span class="hero__sub-sep" aria-hidden="true">／</span>
+      <span class="hero__credit">主催：{HOSTS[0]!.name}</span>
+      <span class="hero__credit">主催サポート：{SUPPORTERS[0]!.name}</span>
     </p>
 
     <div class="hero__cta">
@@ -166,11 +170,23 @@ import { withBase } from '../lib/path';
   }
 
   .hero__sub {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem 0.9rem;
     margin: 0 0 2.4rem;
     font-size: clamp(0.82rem, 2.2vw, 0.98rem);
     letter-spacing: 0.14em;
     color: rgba(251, 243, 226, 0.82);
     animation: fadeUp 1s 1.3s both;
+  }
+  .hero__sub-sep { color: rgba(242, 216, 155, 0.5); }
+  .hero__credit { white-space: nowrap; }
+  .hero__credit + .hero__credit::before {
+    content: '／';
+    margin-right: 0.9rem;
+    color: rgba(242, 216, 155, 0.5);
   }
 
   .hero__cta {

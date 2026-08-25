@@ -1,12 +1,11 @@
-# 画像アセットの差し替えガイド
+# 画像アセットについて
 
 すべての画像は `public/assets/` 配下にあります。
 ここに置いたファイルはビルド後 `/assets/...` としてそのまま配信されます。
 
-差し替え方法は 2 通りです。
-
-1. **同じファイル名で上書きする** ── コードの変更は不要です（推奨）
-2. **別のファイル名で追加する** ── `src/data/*.ts` の `image:` / `logo:` を新しいファイル名に書き換えます
+- **リネーム対照表** → [`RENAME.md`](RENAME.md)
+  元素材のファイル名（日本語・記号あり）と、サイト上のファイル名の対応表です。
+  `tools/import-assets.mjs` を実行すると自動生成されます。
 
 ---
 
@@ -14,98 +13,83 @@
 
 | ディレクトリ | 中身 | 参照している設定ファイル |
 | --- | --- | --- |
-| `logo/` | 大会公式ロゴ（縦型・横型） | `src/layouts` `src/components/Header.astro` `Footer.astro` `Hero.astro` |
-| `bg/` | 背景パターン | `src/styles/global.css` |
-| `parts/` | 配信画面から切り出した装飾パーツ（フレーム・ネームプレート等） | 現状未使用。装飾追加時に利用可 |
-| `guests/` | 出演者アイコン | `src/data/guests.ts` |
-| `creators/` | クリエイターアイコン | `src/data/creators.ts` |
+| `logo/` | 大会公式ロゴ（縦型・横型） | `Header.astro` `Footer.astro` `Hero.astro` |
+| `ogp/` | OGP画像（SNSシェア用 1200×630・自動合成） | `Base.astro` |
+| `bg/` | 背景パターン | `Base.astro`（CSS変数として注入） |
+| `parts/` | 配信画面から切り出した装飾パーツ | 予備（現状未使用） |
+| `characters/` | ミニキャラ（SD） | `schedule.astro`（カウントダウン左上・右下） |
+| `guests/` | 出演者のバストアップ（正方形640px・カードのグリッド用） | `src/data/guests.ts` |
+| `guests/full/` | 出演者の全身（主催・主催サポート・解説の大きいカード用） | 同上（`PersonCard` が自動で使い分け） |
+| `creators/` | クリエイター／サポートスタッフのアイコン | `src/data/creators.ts` |
 | `sponsors/` | 企業協賛ロゴ | `src/data/sponsors.ts` |
-| `prizes/` | 賞品・協賛紹介画像 | `src/data/prizes.ts` |
+| `prizes/` | 賞品・協賛紹介画像・トロフィー | `src/data/prizes.ts` |
+| `exhibition/` | エキシビジョン関連（山本さん立ち絵ほか） | 予備 |
 
 ---
 
-## 差し替えが必要なファイル（現在プレースホルダー）
+## 画像を差し替える方法
 
-`.svg` のものは自動生成したプレースホルダーです。本番画像に差し替えてください。
-拡張子が変わる場合（`.svg` → `.png` / `.jpg`）は、対応するデータファイルの
-`image:` / `logo:` の記述も新しいファイル名に書き換えてください。
+### A. 素材フォルダごと入れ替える（推奨）
 
-### 出演者アイコン `guests/`
-
-| ファイル | 対象 |
-| --- | --- |
-| `akedo-ena.svg` | 明戸えな（主催） |
-| `oshitara-ataru.svg` | おしたらあたる（主催サポート） |
-| `hosoya-takuma.svg` | 細谷拓真（解説・招待枠・エキシビジョン） |
-| `nishino-ururi.svg` | 西乃うるり |
-| `chigo.svg` | 稚児 |
-| `takeoshan.svg` | タケオしゃん |
-| `hinano-chino.svg` | 雛呑ちの |
-| `yuntyuru.svg` | ゆんちゅる |
-| `holy-night-snow.svg` | 聖夜ノ雪 |
-| `yamato-chitose.svg` | 大和ちとせ |
-| `akarun.svg` | あかるん |
-| `kyomuneko.svg` | 虚無ねこ |
-| `momonoki-kanari.svg` | 百軒カナリ |
-| `ukuna.svg` | うくな |
-
-推奨サイズ：正方形 512×512px 以上（JPEG / PNG / WebP）
-
-### クリエイターアイコン `creators/`
-
-| ファイル | 対象 |
-| --- | --- |
-| `153day.svg` | 153day様（大会デザイン一式） |
-| `mochizuki-nagumo.svg` | 望月南雲様（キービジュアルイラスト） |
-| `sakura-secho.svg` | 桜せちょ様（テーマ楽曲） |
-| `ginka.svg` | 銀貨先生様（公式サイト） |
-
-推奨サイズ：正方形 512×512px 以上
-
-### 企業協賛ロゴ `sponsors/`
-
-| ファイル | 対象 |
-| --- | --- |
-| `3r.svg` | スリーアール株式会社様 |
-| `kimura-shuzo.svg` | 株式会社木村酒造様 |
-| `uzakushiki.svg` | ウザク式様 |
-| `okuyama-shoten.svg` | 合資会社奥山商店様 |
-| `lien.svg` | online pâtisserie Lien様 |
-| `men-hyakushiki.svg` | 麺百式様 |
-| `merrypamerry.svg` | めりぃぱめりぃ様 |
-
-推奨サイズ：横長 960×480px 程度／背景は白または透過PNG
-
----
-
-## すでに本番画像が入っているファイル
-
-### 賞品・協賛紹介画像 `prizes/`
-
-いただいた協賛紹介画像を Web 用に 1600px 幅へリサイズして配置済みです。
-差し替える場合は同名で上書きしてください（16:9 推奨）。
-
-`rank01-3r-agrelux.jpg` / `rank02-kimura-shuzo.jpg` / `rank03-uzakushiki.jpg` /
-`rank04-okuyama-shoten.jpg` / `rank05-lien.jpg` / `rank06-07-men-hyakushiki.jpg` /
-`rank08-lemo.jpg` / `rank09-10-merrypamerry.jpg` / `special-3r-zoniq.jpg` /
-`special-lien-cookie.jpg` / `personal-kanari.jpg` / `personal-ukuna.jpg` /
-`personal-merrypamerry.jpg` / `personal-kanose-asa-01.jpg` / `personal-kanose-asa-02.jpg`
-
-### ロゴ `logo/`
-
-- `logo-main.png` … 縦型ロゴ（ヒーロー／フッター）
-- `logo-horizontal.png` … 横型ロゴ（ヘッダー／OGP）
-
-### 背景・パーツ
-
-- `bg/pattern-crimson.jpg` … サイト全体の背景パターン
-- `parts/frame-gold.png` `parts/nameplate-*.png` `parts/logo-small.png` … 配信画面素材から切り出したパーツ（予備）
-
----
-
-## プレースホルダーの再生成
+リポジトリ直下の素材フォルダを新しいものに置き換えてから、`site/` で実行します。
 
 ```bash
-node tools/gen-placeholders.mjs          # 未生成のものだけ作る
-node tools/gen-placeholders.mjs --force  # すべて作り直す
+node tools/import-assets.mjs
 ```
+
+リネーム・リサイズ・WebP変換・対照表の更新まで一括で行われます。
+取り込む対象を増減したいときは `tools/import-assets.mjs` の `JOBS` 配列を編集してください。
+
+### B. 個別に差し替える
+
+`public/assets/` 配下に**同名で上書き**するのが最も簡単です。
+拡張子が変わる場合（`.webp` → `.png` など）は、対応するデータファイルの
+`image:` / `logo:` の記述も新しいファイル名に書き換えてください。
+
+---
+
+## 出演者画像の切り出しについて
+
+立ち絵の元データは、PNGの**透明余白の量がファイルごとに大きく違います**
+（上余白 11px〜89px、左余白 0px〜110px）。そのまま正方形に切り出すと
+顔の大きさが3倍近くバラつくため、取り込み時に次の処理をしています。
+
+1. 透明部分を自動で取り除いて「絵の実寸」を求める
+2. そこから正方形のバストアップを切り出す → `guests/<name>.webp`（640×640）
+3. 全身版も別に書き出す → `guests/full/<name>.webp`
+
+**顔の大きさや位置を調整したいとき**は、`tools/import-assets.mjs` の
+`GUESTS` 配列にある数値を変えて `npm run assets` を実行してください。
+
+```js
+['招待枠立ち絵素材/chigo.png', 'chigo', '稚児', { w: 0.78, y: 0.00, x: 0.10 }],
+//                                                  ↑        ↑        ↑
+//   w : 切り出す幅（絵の横幅に対する割合）。小さいほど顔に寄る
+//   y : 切り出しの上端（絵の高さに対する割合）。0 = 頭のてっぺん
+//   x : 横方向のずらし（+ で右へ）
+```
+
+実行すると `site/tools/_contact-sheet.png` に14名を並べた確認用の一覧画像が
+書き出されるので、顔の大きさが揃っているかを見ながら調整できます。
+（この画像は公開されません）
+
+---
+
+## 画像形式について
+
+写真・イラストはすべて **WebP**（品質82）で書き出しています。
+透過を保ったままPNGより大幅に軽く、主要ブラウザすべてで表示できます。
+背景パターンとOGP画像のみJPEGです。
+
+素材フォルダ全体では約90MBありますが、サイトに載せている画像は
+リサイズ・変換後で **合計約3.5MB** に収まっています。
+
+---
+
+## 未入稿・代用しているもの
+
+| 対象 | 状況 |
+| --- | --- |
+| 沼津麺百式様 ロゴ | ロゴデータ未入稿のため、商品バナー画像で代用中 |
+| 麻雀雑貨Lemo様 ロゴ | 企業協賛一覧に掲載がないため未取り込み（8位賞品の紹介画像のみ使用） |
+| 三反田様／鹿瀬あさ様 | 個人協賛のためロゴなし（賞品紹介画像のみ） |

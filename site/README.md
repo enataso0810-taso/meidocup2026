@@ -21,6 +21,8 @@ npm run dev      # http://localhost:4321
 | `npm run dev` | 開発サーバーを起動 |
 | `npm run build` | `site/dist/` に静的サイトを出力 |
 | `npm run preview` | ビルド結果をローカル確認 |
+| `npm run check` | 型・構文チェック |
+| `npm run assets` | 素材フォルダから画像を取り込み直す（リネーム＋軽量化＋対照表生成） |
 
 ---
 
@@ -65,11 +67,34 @@ export const AGRELUX = {
 ### 4. 賞品 → `src/data/prizes.ts`
 ### 5. ルール・禁止事項 → `src/data/rules.ts`
 ### 6. スケジュール → `src/data/schedule.ts`
-### 7. クリエイター → `src/data/creators.ts`
+### 7. クリエイター・大会サポートスタッフ → `src/data/creators.ts`
+
+紹介文は `bio:` に入ります。未入稿の間は `sample(160)` のような
+サンプルテキスト（「サンプルテキスト160文字」を想定文字数まで繰り返したもの）が
+入っているので、原稿が届いたら文字列をそのまま差し替えてください。
+
+```ts
+{
+  name: '153day様',
+  role: '大会デザイン一式',
+  bio: sample(160),        // ← ここを実際の紹介文に置き換える
+}
+```
+
+モデレーターは同ファイルの `MODERATORS` 配列で管理しています。
 
 ### 8. 画像 → `public/assets/`
 
-差し替え方法は [`public/assets/README.md`](public/assets/README.md) を参照してください。
+差し替え方法は [`public/assets/README.md`](public/assets/README.md)、
+元素材とサイト上のファイル名の対応は [`public/assets/RENAME.md`](public/assets/RENAME.md) を参照してください。
+
+素材フォルダごと入れ替えた場合は、`site/` で次を実行すれば取り込み直せます。
+
+```bash
+npm run assets
+```
+
+リネーム・リサイズ・WebP変換・OGP画像の合成・対照表の更新まで一括で行われます。
 
 ---
 
@@ -98,11 +123,24 @@ export const AGRELUX = {
 2. リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** に変更
 3. `site/astro.config.mjs` の `site` / `base` を公開先に合わせて設定
 
-| 公開先 | 設定 |
-| --- | --- |
-| `https://<user>.github.io/` | `site: 'https://<user>.github.io'`（`base` なし） |
-| `https://<user>.github.io/<repo>/` | `site: 'https://<user>.github.io'` + `base: '/<repo>'` |
-| 独自ドメイン | `site: 'https://example.jp'`（`base` なし）＋ `public/CNAME` を追加 |
+`site/astro.config.mjs` の冒頭にある **`SITE` と `BASE` の 2 行だけ**を書き換えます。
+それ以外の行（コメントを含む）は触らないでください。
+
+```js
+const SITE = 'https://ユーザー名.github.io';  // 末尾スラッシュなし
+const BASE = '';                              // サブディレクトリを使う場合のみ '/リポジトリ名'
+```
+
+| 公開URL | `SITE` | `BASE` |
+| --- | --- | --- |
+| `https://ユーザー名.github.io/` | `'https://ユーザー名.github.io'` | `''` |
+| `https://ユーザー名.github.io/リポジトリ名/` | `'https://ユーザー名.github.io'` | `'/リポジトリ名'` |
+| 独自ドメイン `https://akedohai.jp/` | `'https://akedohai.jp'` | `''` ＋ `public/CNAME` を追加 |
+
+> **注意**：GitHub のリポジトリ名に日本語は使えず、自動的にハイフンへ置換されます。
+> 例えば「明戸杯2026」というリポジトリ名は `-2026` になり、公開URLも
+> `https://ユーザー名.github.io/-2026/` という見栄えの悪いものになります。
+> `akedo-hai-2026` のような半角英数のリポジトリ名を推奨します。
 
 `main` ブランチへの push で `.github/workflows/deploy.yml` が走り、自動的に公開されます。
 
@@ -127,15 +165,13 @@ export const AGRELUX = {
 
 | 項目 | 状態 | 更新場所 |
 | --- | --- | --- |
+| エキシビジョン投票フォーム | 「応募フォーム準備中」表示 | `src/data/site.ts` の `EXHIBITION_VOTE.formUrl` |
+| クリエイター各位の紹介文 | サンプルテキスト表示 | `src/data/creators.ts` の `bio:` |
 | 聖夜ノ雪様・虚無ねこ様のキャッチコピー | 「Coming Soon」表示 | `src/data/guests.ts` |
 | トーナメント表 | 「COMING SOON」枠を設置済み | `src/pages/schedule.astro` |
 | AGRelux クーポンコード | 「COMING SOON」チケット表示 | `src/data/sponsors.ts` |
 | スリーアール様プレスリリースURL | 「公開準備中」表示 | `src/data/sponsors.ts` |
-| 配信URL | ボタン非表示 | `src/data/site.ts` |
-| 出演者・クリエイターのアイコン | 自動生成プレースホルダー | `public/assets/guests/` `creators/` |
-| 企業ロゴ | 自動生成プレースホルダー | `public/assets/sponsors/` |
-| ルール詳細（持ち点・赤ドラ等） | 雀魂 段位戦の標準設定で仮置き | `src/data/rules.ts` |
-| 禁止事項 | 一般的な内容で起案 | `src/data/rules.ts` |
+| 沼津麺百式様 ロゴ | 商品バナー画像で代用中 | `public/assets/sponsors/` |
 
 ---
 
@@ -154,6 +190,9 @@ export const AGRELUX = {
 モチーフは祥雲・梅の花・雷紋（回紋）・麻雀牌。
 見出しは明朝体（Shippori Mincho B1）、本文はゴシック（Zen Kaku Gothic New）です。
 
-トップページの WebGL 演出（`src/scripts/hero.ts`）は麻雀牌・梅の花びら・金の粒子が
-舞う構成で、`prefers-reduced-motion` の指定時は動きを大幅に抑えます。
+トップページの WebGL 演出（`src/scripts/hero.ts`）は、秋の祭典に合わせて
+**麻雀牌・紅葉（もみじ／銀杏）・金の粒子**が舞う構成です。
+麻雀牌は全面を角丸にしたジオメトリで、牌面は Canvas から生成しています
+（「白」は日本麻雀にならって完全な無地）。
+`prefers-reduced-motion` の指定時は動きを大幅に抑え、
 WebGL 非対応環境ではグラデーション背景にフォールバックします。

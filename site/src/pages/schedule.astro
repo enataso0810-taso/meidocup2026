@@ -4,6 +4,7 @@ import SectionHead from '../components/SectionHead.astro';
 import Countdown from '../components/Countdown.astro';
 import { SCHEDULE, SCHEDULE_NOTE } from '../data/schedule';
 import { EVENT } from '../data/site';
+import { withBase } from '../lib/path';
 
 const KIND_LABEL: Record<string, string> = {
   standby: '待機',
@@ -19,17 +20,37 @@ const KIND_LABEL: Record<string, string> = {
   title="スケジュール"
   pageTitle="スケジュール"
   pageTitleEn="SCHEDULE"
-  pageLead={`${EVENT.dateLabelJa}、${EVENT.timeLabel}。本会場（神視点）配信とともに一日をお楽しみください。`}
+  pageLead={`${EVENT.dateLabelJa}、${EVENT.timeLabel}。\n本会場（神視点）配信とともに一日をお楽しみください。`}
 >
   {/* ===== カウントダウン ===== */}
   <section class="section">
     <div class="shell-narrow">
-      <div class="reveal">
+      <div class="cdwrap reveal">
+        <img
+          class="cdwrap__sd cdwrap__sd--tl"
+          src={withBase('assets/characters/ena-sd.webp')}
+          alt=""
+          aria-hidden="true"
+          width="500"
+          height="556"
+          loading="lazy"
+          decoding="async"
+        />
         <Countdown
           target={EVENT.startsAt}
           label="開幕まで"
           sublabel={`${EVENT.dateLabelJa} 13:00 開会式スタート`}
           finishedText="開幕！"
+        />
+        <img
+          class="cdwrap__sd cdwrap__sd--br"
+          src={withBase('assets/characters/ataru-sd.webp')}
+          alt=""
+          aria-hidden="true"
+          width="500"
+          height="556"
+          loading="lazy"
+          decoding="async"
         />
       </div>
     </div>
@@ -103,6 +124,41 @@ const KIND_LABEL: Record<string, string> = {
 </Base>
 
 <style>
+  /* --- カウントダウン＋ミニキャラ --- */
+  .cdwrap { position: relative; }
+  .cdwrap__sd {
+    position: absolute;
+    z-index: 2;
+    width: clamp(78px, 13vw, 128px);
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 8px 18px rgba(30, 1, 10, 0.55));
+    animation: sdFloat 4.5s ease-in-out infinite;
+  }
+  /* 左上：明戸えな */
+  .cdwrap__sd--tl {
+    top: 0;
+    left: 0;
+    transform: translate(-16%, -46%) rotate(-7deg);
+  }
+  /* 右下：おしたらあたる */
+  .cdwrap__sd--br {
+    right: 0;
+    bottom: 0;
+    transform: translate(16%, 44%) rotate(7deg);
+    animation-delay: -2.2s;
+  }
+  @keyframes sdFloat {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -8px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .cdwrap__sd { animation: none; } }
+  /* 画面が狭いときはカウントダウンに重ならないよう控えめに */
+  @media (max-width: 560px) {
+    .cdwrap__sd--tl { transform: translate(-8%, -40%) rotate(-7deg); }
+    .cdwrap__sd--br { transform: translate(8%, 38%) rotate(7deg); }
+  }
+
   /* --- タイムライン --- */
   .tl { list-style: none; margin: 0; padding: 0; position: relative; }
   .tl__item {

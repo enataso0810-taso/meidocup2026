@@ -1,7 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import SectionHead from '../components/SectionHead.astro';
-import { RULE_SUMMARY, RULE_TABLE, RULE_TABLE_NOTE, PROHIBITIONS, PROHIBITION_NOTE } from '../data/rules';
+import {
+  RULE_SUMMARY, RULE_TABLE, RULE_TABLE_NOTE,
+  PROHIBITIONS, PROHIBITION_NOTE, NOTICES,
+} from '../data/rules';
 import { SCHEDULE } from '../data/schedule';
 import { withBase } from '../lib/path';
 
@@ -12,7 +15,7 @@ const matches = SCHEDULE.filter((s) => s.kind === 'match');
   title="ルール・禁止事項"
   pageTitle="ルール・禁止事項"
   pageTitleEn="RULES"
-  pageLead="明戸杯2026は雀魂 段位戦準拠の四人打ち麻雀トーナメントです。参加される皆さまは必ず一読ください。"
+  pageLead={"明戸杯2026は雀魂 段位戦準拠の四人打ち麻雀トーナメントです。\n参加される皆さまは必ず一読ください。"}
 >
   {/* ===== ルール要約 ===== */}
   <section class="section">
@@ -87,6 +90,7 @@ const matches = SCHEDULE.filter((s) => s.kind === 'match');
         title="禁止事項"
         en="PROHIBITED"
         lead="全員が気持ちよく楽しめる大会にするため、以下の行為を禁止します。"
+        oneLine
       />
 
       <div class="prohibit">
@@ -100,6 +104,30 @@ const matches = SCHEDULE.filter((s) => s.kind === 'match');
       </div>
 
       <p class="note prohibit__note reveal">{PROHIBITION_NOTE}</p>
+    </div>
+  </section>
+
+  {/* ===== 注意事項 ===== */}
+  <section class="section">
+    <div class="shell">
+      <SectionHead
+        title="注意事項"
+        en="NOTES"
+        lead="禁止事項とは別に、参加される皆さまへのお願いです。"
+        oneLine
+      />
+
+      <div class="notices">
+        {NOTICES.map((n, i) => (
+          <article class="notice reveal">
+            <span class="notice__no" aria-hidden="true">{`0${i + 1}`}</span>
+            <div>
+              <h3>{n.title}</h3>
+              <p>{n.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 </Base>
@@ -239,4 +267,37 @@ const matches = SCHEDULE.filter((s) => s.kind === 'match');
   }
   .prohibit__card p { margin: 0; font-size: 0.9rem; line-height: 1.85; color: rgba(251, 243, 226, 0.85); }
   .prohibit__note { margin-top: 1.8rem; }
+
+  /* --- 注意事項 --- */
+  .notices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: 1rem;
+  }
+  .notice {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.1rem;
+    align-items: start;
+    padding: 1.5rem 1.6rem;
+    background: linear-gradient(160deg, rgba(184, 134, 44, 0.24), rgba(92, 5, 24, 0.6));
+    border: 1px solid rgba(217, 164, 65, 0.5);
+    border-left: 3px solid var(--c-gold);
+    border-radius: 4px;
+  }
+  .notice__no {
+    font-family: var(--font-en);
+    font-size: 1.9rem;
+    line-height: 1;
+    color: rgba(242, 216, 155, 0.45);
+  }
+  .notice h3 {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: 1.08rem;
+    line-height: 1.45;
+    color: var(--c-gold-light);
+  }
+  .notice p { margin: 0; font-size: 0.91rem; line-height: 1.9; color: rgba(251, 243, 226, 0.87); }
 </style>

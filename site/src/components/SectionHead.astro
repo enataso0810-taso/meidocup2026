@@ -1,9 +1,33 @@
 ---
-interface Props { title: string; en: string; lead?: string; }
-const { title, en, lead } = Astro.props;
+interface Props {
+  title: string;
+  en: string;
+  lead?: string;
+  /** lead の改行（\n）をそのまま反映する */
+  keepBreaks?: boolean;
+  /** lead を折り返さず一行で表示する（収まらない画面では通常折り返し） */
+  oneLine?: boolean;
+}
+const { title, en, lead, keepBreaks = false, oneLine = false } = Astro.props;
 ---
 <div class="sect-head reveal">
   <h2>{title}</h2>
   <span class="en">{en}</span>
 </div>
-{lead && <p class="sect-lead reveal">{lead}</p>}
+{
+  lead && (
+    <p class:list={['sect-lead', 'reveal', { 'sect-lead--breaks': keepBreaks, 'sect-lead--oneline': oneLine }]}>
+      {lead}
+    </p>
+  )
+}
+
+<style>
+  /* 改行位置を原稿どおりに保つ */
+  .sect-lead--breaks { white-space: pre-line; max-width: none; }
+  /* 一行に収める（画面が狭いときだけ折り返す） */
+  .sect-lead--oneline { max-width: none; }
+  @media (min-width: 720px) {
+    .sect-lead--oneline { white-space: nowrap; }
+  }
+</style>

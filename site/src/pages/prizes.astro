@@ -4,7 +4,8 @@ import SectionHead from '../components/SectionHead.astro';
 import PrizeCard from '../components/PrizeCard.astro';
 import { withBase } from '../lib/path';
 import {
-  RANK_PRIZES, RANK_PRIZES_NOTE, HOST_PRIZES, PERSONAL_PRIZES, INVITED_PRIZES, EXHIBITION_PRIZES,
+  RANK_PRIZES, RANK_PRIZES_NOTE, TROPHIES,
+  HOST_PRIZES, PERSONAL_PRIZES, INVITED_PRIZES, EXHIBITION_PRIZES,
 } from '../data/prizes';
 
 
@@ -14,6 +15,7 @@ const totalCount =
 
 const jumps = [
   { id: 'rank', label: '上位賞' },
+  { id: 'trophy', label: 'トロフィー' },
   { id: 'host', label: '主催賞' },
   { id: 'personal', label: '個人協賛賞' },
   { id: 'invited', label: '招待枠限定' },
@@ -48,6 +50,37 @@ const jumps = [
         {RANK_PRIZES.map((p) => <PrizeCard prize={p} tone="gold" />)}
       </div>
       <p class="note grid__note reveal">{RANK_PRIZES_NOTE}</p>
+    </div>
+  </section>
+
+  {/* ===== トロフィーアクキー ===== */}
+  <section class="section" id="trophy">
+    <div class="shell">
+      <SectionHead
+        title="トロフィーアクリルキーホルダー"
+        en="TROPHY ACRYLIC KEYCHAIN"
+        lead="1〜3位の方には、賞品とあわせて明戸杯2026オリジナルのトロフィーデザインアクリルキーホルダーを贈呈します。"
+      />
+
+      <div class="trophies">
+        {TROPHIES.map((t) => (
+          <figure class:list={['trophy', `trophy--${t.label}`, 'reveal']}>
+            <div class="trophy__glow" aria-hidden="true"></div>
+            <img
+              src={withBase(`assets/prizes/${t.image}`)}
+              alt={`明戸杯2026 トロフィーアクキー ${t.label}（${t.rank}）`}
+              width="620"
+              height="866"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <span class="trophy__rank">{t.rank}</span>
+              <span class="trophy__label">{t.label}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -129,6 +162,67 @@ const jumps = [
     transition: background 0.2s ease, color 0.2s ease;
   }
   .jump a:hover { background: var(--c-crimson); border-color: var(--c-rouge-light); color: #fff; }
+
+  /* --- トロフィー --- */
+  .trophies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    gap: clamp(1rem, 3vw, 2rem);
+  }
+  .trophy {
+    position: relative;
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    padding: 2rem 1.2rem 1.5rem;
+    background: linear-gradient(170deg, rgba(163, 10, 46, 0.4), rgba(45, 2, 12, 0.75));
+    border: 1px solid rgba(217, 164, 65, 0.45);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1), border-color 0.3s ease;
+  }
+  .trophy:hover { transform: translateY(-6px); border-color: var(--c-gold); }
+  .trophy__glow {
+    position: absolute;
+    inset: -30% -10% auto;
+    height: 90%;
+    background: radial-gradient(60% 60% at 50% 50%, rgba(242, 216, 155, 0.3), transparent 70%);
+    pointer-events: none;
+  }
+  .trophy--銀 .trophy__glow { background: radial-gradient(60% 60% at 50% 50%, rgba(226, 232, 240, 0.28), transparent 70%); }
+  .trophy--銅 .trophy__glow { background: radial-gradient(60% 60% at 50% 50%, rgba(214, 150, 96, 0.28), transparent 70%); }
+  .trophy img {
+    position: relative;
+    height: clamp(190px, 26vw, 270px);
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 28px rgba(20, 0, 8, 0.6));
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .trophy:hover img { transform: scale(1.05) translateY(-4px); }
+  .trophy figcaption {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+  }
+  .trophy__rank {
+    font-family: var(--font-mincho);
+    font-weight: 800;
+    font-size: clamp(1.2rem, 3.4vw, 1.5rem);
+    color: #fff;
+  }
+  .trophy__label {
+    padding: 0.1rem 0.8rem;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    border-radius: 999px;
+    border: 1px solid var(--c-gold);
+    color: var(--c-gold-light);
+  }
 
   .grid {
     display: grid;

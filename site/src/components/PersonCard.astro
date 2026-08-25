@@ -13,12 +13,23 @@ interface Props {
   catchPlaceholder?: boolean;
 }
 const { person, featured = false, showMeta = false, catchPlaceholder = false } = Astro.props;
-const img = withBase(`assets/guests/${person.image}`);
+// featured（主催・主催サポート・解説）は全身、カードのグリッドはバストアップを使う
+const img = featured
+  ? withBase(`assets/guests/full/${person.image}`)
+  : withBase(`assets/guests/${person.image}`);
 ---
 
 <article class:list={['pcard', { 'pcard--featured': featured }, 'reveal']}>
   <div class="pcard__frame">
-    <img class="pcard__img" src={img} alt={person.name} width="400" height="400" loading="lazy" decoding="async" />
+    <img
+      class="pcard__img"
+      src={img}
+      alt={person.name}
+      width={featured ? 620 : 640}
+      height={featured ? 900 : 640}
+      loading="lazy"
+      decoding="async"
+    />
     {person.role && <span class="pcard__role">{person.role}</span>}
   </div>
 
@@ -68,7 +79,9 @@ const img = withBase(`assets/guests/${person.image}`);
   .pcard__img {
     width: 100%;
     height: 100%;
+    /* 取り込み時に正方形のバストアップへ切り出し済みなので、そのまま敷き詰める */
     object-fit: cover;
+    object-position: center;
     transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
   }
   .pcard:hover .pcard__img { transform: scale(1.06); }
@@ -133,8 +146,10 @@ const img = withBase(`assets/guests/${person.image}`);
   }
   .pcard__catch--tbd { color: rgba(251, 243, 226, 0.4); font-size: 0.8rem; font-style: italic; }
 
-  .pcard--featured { grid-template-columns: minmax(0, 200px) minmax(0, 1fr); grid-template-rows: 1fr; }
-  .pcard--featured .pcard__frame { aspect-ratio: auto; height: 100%; min-height: 200px; }
+  .pcard--featured { grid-template-columns: minmax(0, 260px) minmax(0, 1fr); grid-template-rows: 1fr; }
+  .pcard--featured .pcard__frame { aspect-ratio: auto; height: 100%; min-height: 260px; }
+  .pcard--featured .pcard__img { object-fit: contain; object-position: center bottom; padding: 0.8rem 0.4rem 0; }
+  .pcard--featured .pcard__frame::after { box-shadow: none; }
   .pcard--featured .pcard__body { padding: 1.6rem 1.8rem; align-content: center; gap: 0.7rem; }
   .pcard--featured .pcard__name { font-size: clamp(1.4rem, 4vw, 1.9rem); }
 

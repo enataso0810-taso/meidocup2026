@@ -9,17 +9,30 @@ import { EXHIBITION_PRIZES } from '../data/prizes';
 import { SITE, EXHIBITION_VOTE } from '../data/site';
 import { withBase } from '../lib/path';
 
-
-const intent = (name: string) =>
-  `https://x.com/intent/post?text=${encodeURIComponent(
-    `秋のエキシビジョンマッチ、1位予想は「${name}」！ ${SITE.hashtag}`
-  )}`;
+const hasForm = EXHIBITION_VOTE.formUrl !== '';
+const hasDeadline = EXHIBITION_VOTE.deadlineAt !== '';
 
 const steps = [
-  { n: '01', t: '出演メンバーから1位を予想', b: '下の4名から、エキシビジョンマッチで1位になると思う選手を選びます。' },
-  { n: '02', t: `${SITE.hashtag} を付けてポスト`, b: '誰に投票したかが分かるように、ハッシュタグを付けてXにポストしてください。' },
-  { n: '03', t: '締切までに投稿完了', b: `${EXHIBITION_VOTE.deadlineLabel}（${EXHIBITION_VOTE.note}）が締切です。` },
-  { n: '04', t: '的中者から抽選で1名', b: '見事的中した方の中から抽選で1名様に「山本の米 新米10kg」をプレゼント。' },
+  {
+    n: '01',
+    t: '出演メンバーから1位を予想',
+    b: '下の4名から、エキシビジョンマッチで1位になると思う選手を選びます。',
+  },
+  {
+    n: '02',
+    t: '応募フォームから投票',
+    b: 'Googleフォームに必要事項と予想する選手を入力して送信してください。投票は1人1回までです。',
+  },
+  {
+    n: '03',
+    t: `${SITE.hashtag} を付けてポスト`,
+    b: '誰に投票したかをXでポストしていただけると、大会がより盛り上がります（任意）。',
+  },
+  {
+    n: '04',
+    t: '的中者から抽選で1名',
+    b: '見事的中した方の中から抽選で1名様に「山本の米 新米10kg」をプレゼント。',
+  },
 ];
 ---
 
@@ -27,29 +40,56 @@ const steps = [
   title="秋のエキシビジョンマッチ"
   pageTitle="秋のエキシビジョンマッチ"
   pageTitleEn="EXHIBITION MATCH"
-  pageLead="明戸杯2026（主催・明戸えな）大会後半にてエキシビションマッチを企画！ 以下4名の鉄強雀士から、1位になる選手を予想して投票しよう！"
+  pageLead={"明戸杯2026（主催・明戸えな）大会後半にてエキシビションマッチを企画！\n以下4名の鉄強雀士から、1位になる選手を予想して投票しよう！"}
 >
-  {/* ===== 投票カウントダウン ===== */}
+  {/* ===== 投票案内 ===== */}
   <section class="section">
     <div class="shell">
       <div class="votebar panel reveal">
         <div class="votebar__lead">
           <p class="ribbon">投票受付中</p>
           <h2 class="votebar__title">1位を予想して<br /><span>山本の米 新米10kg</span>を当てよう</h2>
+
           <p class="votebar__body">
-            見事的中した人の中から抽選で1名様に「山本の米 新米10kg」をプレゼント。
+            見事的中した人の中から抽選で1名様に「山本の米 新米10kg」をプレゼント。<br />
             誰に投票したか、<a href={SITE.hashtagUrl} target="_blank" rel="noopener noreferrer">{SITE.hashtag}</a> のタグを付けてポストしてね！
           </p>
+
+          <p class="votebar__open">
+            <span class="votebar__open-tag">どなたでも参加OK</span>
+            {EXHIBITION_VOTE.openTo}
+          </p>
+
+          <div class="votebar__cta">
+            {hasForm ? (
+              <a class="btn btn-teal" href={EXHIBITION_VOTE.formUrl} target="_blank" rel="noopener noreferrer">
+                応募フォームから投票する
+              </a>
+            ) : (
+              <span class="votebar__pending">応募フォーム準備中</span>
+            )}
+            <span class="votebar__deadline">受付：{EXHIBITION_VOTE.note}</span>
+          </div>
         </div>
 
-        <div class="votebar__cd">
-          <Countdown
-            target={EXHIBITION_VOTE.deadlineAt}
-            label="投票締め切りまで"
-            sublabel={EXHIBITION_VOTE.deadlineLabel}
-            finishedText="投票を締め切りました"
-            variant="teal"
+        <div class="votebar__side">
+          <img
+            class="votebar__prize"
+            src={withBase('assets/prizes/yamamoto-rice.webp')}
+            alt="山本の米 新米10kg"
+            width="760"
+            height="1124"
+            loading="lazy"
+            decoding="async"
           />
+          {hasDeadline && (
+            <Countdown
+              target={EXHIBITION_VOTE.deadlineAt}
+              label="投票締め切りまで"
+              finishedText="投票を締め切りました"
+              variant="teal"
+            />
+          )}
         </div>
       </div>
     </div>
@@ -68,6 +108,17 @@ const steps = [
           </li>
         ))}
       </ol>
+
+      {hasForm && (
+        <p class="steps__cta reveal">
+          <a class="btn btn-teal" href={EXHIBITION_VOTE.formUrl} target="_blank" rel="noopener noreferrer">
+            応募フォームを開く
+          </a>
+        </p>
+      )}
+      <p class="note reveal" style="margin-top:1.5rem">
+        ※投票はGoogleフォームで受け付けます。{EXHIBITION_VOTE.openTo}
+      </p>
     </div>
   </section>
 
@@ -77,23 +128,12 @@ const steps = [
       <SectionHead
         title="出演メンバー"
         en="PLAYERS"
-        lead="魂天4名による特別対局。名前の下のボタンから、その選手を1位予想としてポストできます。"
+        lead="魂天4名による特別対局。この中から1位になる選手を予想してください。"
       />
 
       <div class="players">
-        {EXHIBITION_PLAYERS.map((p) => (
-          <div class="players__cell">
-            <PersonCard person={p} showMeta />
-            <a class="players__vote btn btn-teal" href={intent(p.name)} target="_blank" rel="noopener noreferrer">
-              {p.name}に投票
-            </a>
-          </div>
-        ))}
+        {EXHIBITION_PLAYERS.map((p) => <PersonCard person={p} showMeta />)}
       </div>
-
-      <p class="note reveal" style="margin-top:1.6rem">
-        ※投票はXへのポストで受け付けます。ボタンを押すとポスト画面が開きます（内容は自由に編集できます）。
-      </p>
     </div>
   </section>
 
@@ -121,7 +161,7 @@ const steps = [
   /* --- 投票バー --- */
   .votebar {
     display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
     gap: clamp(1.5rem, 4vw, 3rem);
     align-items: center;
     padding: clamp(1.7rem, 4.5vw, 2.8rem);
@@ -135,8 +175,53 @@ const steps = [
     color: #fff;
   }
   .votebar__title span { color: var(--c-gold-light); }
-  .votebar__body { margin: 0; font-size: 0.95rem; line-height: 1.95; color: rgba(251, 243, 226, 0.88); }
+  .votebar__body { margin: 0 0 1.1rem; font-size: 0.95rem; line-height: 1.95; color: rgba(251, 243, 226, 0.88); }
   .votebar__body a { text-decoration: underline; text-underline-offset: 3px; }
+
+  .votebar__open {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 1.5rem;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    background: rgba(14, 124, 110, 0.28);
+    border: 1px solid rgba(42, 165, 149, 0.55);
+    border-radius: 3px;
+    color: #d5f6ef;
+  }
+  .votebar__open-tag {
+    flex: none;
+    padding: 0.12rem 0.7rem;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    background: var(--c-teal);
+    color: #fff;
+  }
+
+  .votebar__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.2rem; }
+  .votebar__pending {
+    padding: 0.75rem 1.6rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    color: rgba(251, 243, 226, 0.6);
+    border: 1px dashed rgba(217, 164, 65, 0.5);
+    border-radius: 999px;
+  }
+  .votebar__deadline { font-size: 0.86rem; color: var(--c-gold-light); }
+
+  .votebar__side { display: grid; gap: 1rem; justify-items: center; }
+  .votebar__prize {
+    width: min(100%, 300px);
+    border-radius: 4px;
+    border: 1px solid rgba(217, 164, 65, 0.5);
+    box-shadow: var(--shadow-card);
+  }
 
   /* --- ステップ --- */
   .steps {
@@ -146,7 +231,6 @@ const steps = [
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 1rem;
-    counter-reset: step;
   }
   .steps__item {
     position: relative;
@@ -170,6 +254,7 @@ const steps = [
     color: #fff;
   }
   .steps__item p { margin: 0; font-size: 0.88rem; line-height: 1.85; color: rgba(251, 243, 226, 0.84); }
+  .steps__cta { margin-top: 1.8rem; text-align: center; }
 
   /* --- 出演メンバー --- */
   .players {
@@ -177,8 +262,6 @@ const steps = [
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: clamp(1rem, 2.4vw, 1.5rem);
   }
-  .players__cell { display: grid; gap: 0.8rem; align-content: start; }
-  .players__vote { width: 100%; font-size: 0.92rem; padding: 0.7rem 1rem; }
 
   .agrid {
     display: grid;
