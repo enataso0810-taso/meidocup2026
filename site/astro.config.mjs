@@ -10,7 +10,7 @@ import { defineConfig } from 'astro/config';
  *   例) 'https://ginka1108.github.io'
  *   例) 'https://akedohai.jp'          ← 独自ドメインの場合
  */
-const SITE = 'https://ginka1108.github.io';
+const SITE = 'https://github.com/enataso0810-taso';
 
 /**
  * サブディレクトリ名。先頭にスラッシュを付け、末尾には付けません。
@@ -22,7 +22,7 @@ const SITE = 'https://ginka1108.github.io';
  *   https://ユーザー名.github.io/リポジトリ名/    '/リポジトリ名'
  *   https://独自ドメイン/                       ''
  */
-const BASE = '/-2026';
+const BASE = '/meidocup2026';
 
 /* ═══════════════════════════════════════════════════════════════
    これより下は変更不要です
