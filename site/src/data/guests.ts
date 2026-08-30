@@ -38,6 +38,7 @@ export const SUPPORTERS: Person[] = [
     role: '主催サポート',
     catch: '',
     image: 'oshitara-ataru.webp',
+    affiliation: 'VPL所属',
     x: 'https://x.com/oshi_tara_ataru',
     youtube: 'https://www.youtube.com/@oshitaraataru',
   },
@@ -67,7 +68,7 @@ export const INVITED: Person[] = [
   },
   {
     name: '西乃うるり',
-    catch: 'ウルトラ立直',
+    catch: '日本プロ麻雀協会所属VPL1期生魂天で天鳳位の麻雀大喜利インターネットパンダ',
     image: 'nishino-ururi.webp',
     x: 'https://x.com/ururipanda',
     youtube: 'https://www.youtube.com/@nishino_ururi',
@@ -102,7 +103,7 @@ export const INVITED: Person[] = [
   },
   {
     name: '聖夜ノ雪',
-    catch: '', // キャッチコピー未提出
+    catch: '絶対立直',
     image: 'holy-night-snow.webp',
     x: 'https://x.com/holy_night_snow',
     youtube: 'https://www.youtube.com/@聖夜ノ雪',
@@ -123,7 +124,7 @@ export const INVITED: Person[] = [
   },
   {
     name: '虚無ねこ',
-    catch: '', // キャッチコピー未提出
+    catch: 'かわいさ役満級！',
     image: 'kyomuneko.webp',
     x: 'https://x.com/kyomuneko_dayo',
     youtube: 'https://www.youtube.com/@kyomuneko_dayo',
@@ -157,7 +158,7 @@ export const EXHIBITION_PLAYERS: Person[] = [
   },
   {
     name: '西乃うるり',
-    catch: 'ウルトラ立直',
+    catch: '日本プロ麻雀協会所属VPL1期生魂天で天鳳位の麻雀大喜利インターネットパンダ',
     image: 'nishino-ururi.webp',
     affiliation: '日本プロ麻雀協会・VPL所属',
     rank: '魂天',

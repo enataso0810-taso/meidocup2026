@@ -27,6 +27,18 @@ if (!existsSync(SRC)) {
   process.exit(1);
 }
 
+/**
+ * 素材のパスを解決する。
+ * 素材フォルダ内 → リポジトリ直下（0830追加分 などの追納分）の順に探します。
+ */
+function resolveSrc(from) {
+  for (const root of [SRC, REPO]) {
+    const p = join(root, from);
+    if (existsSync(p)) return p;
+  }
+  return null;
+}
+
 /* ---------------------------------------------------------------------------
    取り込み定義
      from   : 素材フォルダからの相対パス
@@ -54,6 +66,8 @@ const JOBS = [
   ['クリエイター様アイコン画像/銀貨先生様',   'creators/ginka.webp',            400, '銀貨先生様 アイコン'],
   ['クリエイター様アイコン画像/射銀光展様',   'creators/igin-mitsuhiro.webp',   400, '射銀光展様 アイコン（モデレーター）'],
   ['クリエイター様アイコン画像/ネムメル様',   'creators/nemumeru.webp',         400, 'ネムメル様 アイコン（モデレーター）'],
+  ['0830追加分/クリエイター様アイコン画像/べーぐる様.png', 'creators/bagelnuts.webp', 400, 'べーぐる様 アイコン（主催賞 賞品制作）'],
+  ['0830追加分/クリエイター様アイコン画像/浅葱様.png',     'creators/asagi.webp',     400, '浅葱様 アイコン（主催賞 賞品制作）'],
 
   ['── 企業ロゴ'],
   ['企業協賛/スリーアール株式会社様/01_ロゴ/AGRelux_logo_黒_透過.png', 'sponsors/3r.webp',             560, 'AGRelux ロゴ'],
@@ -63,7 +77,7 @@ const JOBS = [
   ['企業協賛/合資会社奥山商店様/企業ロゴ.png',                        'sponsors/okuyama-shoten.webp', 560, '合資会社奥山商店様 ロゴ'],
   ['企業協賛/online pâtisserie Lien様/ロゴ.png',                      'sponsors/lien.webp',           560, 'online pâtisserie Lien様 ロゴ'],
   ['企業協賛/めりぃぱめりぃ様/ぱめりシンボルロゴ3.png',                'sponsors/merrypamerry.webp',   560, 'めりぃぱめりぃ様 ロゴ'],
-  ['企業協賛/麺百式様/phonto.jpeg',                                   'sponsors/men-hyakushiki.webp', 560, '沼津麺百式様 バナー（ロゴ未入稿のため代用）'],
+  ['0830追加分/麺百式ロゴ.jpeg',                                      'sponsors/men-hyakushiki.webp', 560, '沼津麺百式様 お店ロゴ'],
 
   ['── トロフィーアクリルキーホルダー（1〜3位）'],
   ['トロフィーデータ/trophy-gold.png',   'prizes/trophy-gold.webp',   620, 'トロフィーアクキー 金（1位）'],
@@ -71,7 +85,7 @@ const JOBS = [
   ['トロフィーデータ/trophy-bronze.png', 'prizes/trophy-bronze.webp', 620, 'トロフィーアクキー 銅（3位）'],
 
   ['── エキシビジョンマッチ'],
-  ['エキシビジョンマッチ/山本の米/山本の米イメージ写真.png', 'prizes/yamamoto-rice.webp',     760, '山本の米 新米10kg 賞品画像'],
+  ['0830追加分/prize_0830.png',                              'prizes/yamamoto-rice.webp',    1200, '山本の米 新米10kg 賞品画像'],
   ['エキシビジョンマッチ/山本の米/山本さん立ち絵.png',       'exhibition/yamamoto-san.webp',  620, '山本さん 立ち絵'],
 
   ['── 協賛紹介画像（賞品カード）'],
@@ -103,8 +117,8 @@ for (const job of JOBS) {
     continue;
   }
   const [from, to, width, use, opt = {}] = job;
-  const src = join(SRC, from);
-  if (!existsSync(src)) {
+  const src = resolveSrc(from);
+  if (!src) {
     console.log(`  !! 見つかりません: ${from}`);
     missing++;
     continue;
@@ -129,93 +143,101 @@ for (const job of JOBS) {
 }
 
 /* --- 出演者画像 ------------------------------------------------------------
-   立ち絵は PNG の透明余白の量がファイルごとにバラバラで、そのまま正方形に
-   切り出すと顔の大きさが揃いません。そこで
+   カードに使う正方形アイコンは、先方で画角を調整済みのデータ（0830追加分）を
+   そのまま使用します。トリミングや位置調整は行いません。
 
-     1. 透明部分を自動で取り除いて「絵の実寸」を求める
-     2. そこから正方形のバストアップを切り出す（guests/<name>.webp）
-     3. 全身版も別に書き出す（guests/full/<name>.webp）
+   主催・主催サポートの2名だけはアイコンが未入稿のため、立ち絵の透明余白を
+   自動で取り除いてから正方形に切り出しています（w/y/x で微調整可）。
 
-   という2種類を作ります。カードのグリッドは 1、主催・解説の大きいカードは
-   全身版を使います。
-
-   w : 切り出す幅（絵の横幅に対する割合）。小さいほど顔に寄ります
-   y : 切り出しの上端（絵の高さに対する割合）。0 = 頭のてっぺん
-   x : 横方向のずらし（絵の横幅に対する割合。+ で右へ）
+   あわせて、主催・主催サポート・解説の大きいカード用に「全身版」も
+   guests/full/ に書き出します。
    ------------------------------------------------------------------------- */
-const GUESTS = [
-  // [元ファイル, 出力名, 表示名, { w, y, x }]
-  ['大会キービジュアル/meidoena.png',      'akedo-ena',        '明戸えな',       { w: 0.88, y: 0.00, x:  0.06 }],
-  ['大会キービジュアル/oshitaraataru.png', 'oshitara-ataru',   'おしたらあたる', { w: 0.70, y: 0.00, x: -0.05 }],
-  ['招待枠立ち絵素材/hosoya.png',    'hosoya-takuma',   '細谷拓真',     { w: 1.00, y: 0.00 }],
-  ['招待枠立ち絵素材/ururi.png',     'nishino-ururi',   '西乃うるり',   { w: 1.00, y: 0.00 }],
-  ['招待枠立ち絵素材/chigo.png',     'chigo',           '稚児',         { w: 0.78, y: 0.00, x:  0.10 }],
-  ['招待枠立ち絵素材/takeoshan.png', 'takeoshan',       'タケオしゃん', { w: 1.00, y: 0.00 }],
-  ['招待枠立ち絵素材/hinano.png',    'hinano-chino',    '雛呑ちの',     { w: 0.78, y: 0.00 }],
-  ['招待枠立ち絵素材/yunchuru.png',  'yuntyuru',        'ゆんちゅる',   { w: 0.76, y: 0.00 }],
-  ['招待枠立ち絵素材/noyuki.png',    'holy-night-snow', '聖夜ノ雪',     { w: 0.80, y: 0.00 }],
-  ['招待枠立ち絵素材/chitose.png',   'yamato-chitose',  '大和ちとせ',   { w: 0.78, y: 0.00, x:  0.10 }],
-  ['招待枠立ち絵素材/akarun.png',    'akarun',          'あかるん',     { w: 0.88, y: 0.00 }],
-  ['招待枠立ち絵素材/kyomuneko.png', 'kyomuneko',       '虚無ねこ',     { w: 0.84, y: 0.00 }],
-  ['招待枠立ち絵素材/kanari.png',    'momonoki-kanari', '百軒カナリ',   { w: 0.86, y: 0.00 }],
-  ['招待枠立ち絵素材/ukuna.png',     'ukuna',           'うくな',       { w: 1.00, y: 0.00 }],
+
+/** 先方で正方形に調整済みのアイコン（そのまま使う） */
+const GUEST_ICONS = [
+  ['0830追加分/アイコンサイズ透過素材/細谷拓真.png',   'hosoya-takuma',   '細谷拓真'],
+  ['0830追加分/アイコンサイズ透過素材/西乃うるり.png', 'nishino-ururi',   '西乃うるり'],
+  ['0830追加分/アイコンサイズ透過素材/稚児.png',       'chigo',           '稚児'],
+  ['0830追加分/アイコンサイズ透過素材/タケオしゃん.png', 'takeoshan',     'タケオしゃん'],
+  ['0830追加分/アイコンサイズ透過素材/雛呑ちの.png',   'hinano-chino',    '雛呑ちの'],
+  ['0830追加分/アイコンサイズ透過素材/ゆんちゅる.png', 'yuntyuru',        'ゆんちゅる'],
+  ['0830追加分/アイコンサイズ透過素材/聖夜ノ雪.png',   'holy-night-snow', '聖夜ノ雪'],
+  ['0830追加分/アイコンサイズ透過素材/大和ちとせ.png', 'yamato-chitose',  '大和ちとせ'],
+  ['0830追加分/アイコンサイズ透過素材/あかるん.png',   'akarun',          'あかるん'],
+  ['0830追加分/アイコンサイズ透過素材/虚無ねこ.png',   'kyomuneko',       '虚無ねこ'],
+  ['0830追加分/アイコンサイズ透過素材/百軒カナリ.png', 'momonoki-kanari', '百軒カナリ'],
+  ['0830追加分/アイコンサイズ透過素材/うくな.png',     'ukuna',           'うくな'],
+];
+
+/** アイコン未入稿のため立ち絵から自動でバストアップを切り出す2名
+    w : 切り出す幅（絵の横幅に対する割合。小さいほど顔に寄る）
+    y : 切り出しの上端（絵の高さに対する割合。0 = 頭のてっぺん）
+    x : 横方向のずらし（+ で右へ）                                          */
+const GUEST_AUTOCROP = [
+  ['大会キービジュアル/meidoena.png',      'akedo-ena',      '明戸えな',       { w: 0.88, y: 0.00, x: 0.06 }],
+  ['大会キービジュアル/oshitaraataru.png', 'oshitara-ataru', 'おしたらあたる', { w: 0.70, y: 0.00, x: -0.05 }],
+];
+
+/** 大きいカード（主催・主催サポート・解説）で使う全身版 */
+const GUEST_FULL = [
+  ['大会キービジュアル/meidoena.png',      'akedo-ena',      '明戸えな'],
+  ['大会キービジュアル/oshitaraataru.png', 'oshitara-ataru', 'おしたらあたる'],
+  ['招待枠立ち絵素材/hosoya.png',          'hosoya-takuma',  '細谷拓真'],
 ];
 
 {
-  const BUST = 640;   // バストアップの書き出しサイズ
+  const ICON = 640;   // カード用アイコンの書き出しサイズ
   const FULL = 620;   // 全身版の最大幅
-  console.log('\n── 出演者（バストアップ＋全身）');
+  console.log('\n── 出演者');
 
-  for (const [from, name, label, cfg] of GUESTS) {
-    const src = join(SRC, from);
-    if (!existsSync(src)) {
-      console.log(`  !! 見つかりません: ${from}`);
-      missing++;
-      continue;
-    }
+  // 1) 調整済みアイコン：リサイズのみ
+  for (const [from, name, label] of GUEST_ICONS) {
+    const src = resolveSrc(from);
+    if (!src) { console.log(`  !! 見つかりません: ${from}`); missing++; continue; }
+    const out = join(DST, `guests/${name}.webp`);
+    mkdirSync(dirname(out), { recursive: true });
+    const info = await sharp(src).resize(ICON, ICON, { fit: 'cover' }).webp({ quality: 84, effort: 5 }).toFile(out);
+    total += info.size;
+    rows.push({ from, to: `guests/${name}.webp`, use: `${label}（アイコン・調整済みデータ）`, size: info.size, w: ICON, h: ICON });
+    console.log(`  ${label.padEnd(8)} 調整済みアイコン → ${ICON}px (${(info.size / 1024).toFixed(0)}KB)`);
+  }
 
-    // 1) 透明余白を取り除いた「絵の実寸」を得る
+  // 2) アイコン未入稿の2名：透明余白を除去してから正方形に切り出す
+  for (const [from, name, label, cfg] of GUEST_AUTOCROP) {
+    const src = resolveSrc(from);
+    if (!src) { console.log(`  !! 見つかりません: ${from}`); missing++; continue; }
     const trimmed = await sharp(src).trim({ threshold: 1 }).toBuffer({ resolveWithObject: true });
     const { width: tw, height: th } = trimmed.info;
-
-    // 2) 正方形バストアップ
     const side = Math.min(Math.round(tw * (cfg.w ?? 1)), th);
     const left = Math.max(0, Math.min(tw - side, Math.round((tw - side) / 2 + tw * (cfg.x ?? 0))));
     const top = Math.max(0, Math.min(th - side, Math.round(th * (cfg.y ?? 0))));
 
-    const bustOut = join(DST, `guests/${name}.webp`);
-    mkdirSync(dirname(bustOut), { recursive: true });
-    const bustInfo = await sharp(trimmed.data)
+    const out = join(DST, `guests/${name}.webp`);
+    mkdirSync(dirname(out), { recursive: true });
+    const info = await sharp(trimmed.data)
       .extract({ left, top, width: side, height: side })
-      .resize(BUST, BUST)
+      .resize(ICON, ICON)
       .webp({ quality: 84, effort: 5 })
-      .toFile(bustOut);
-    total += bustInfo.size;
-    rows.push({
-      from, to: `guests/${name}.webp`,
-      use: `${label}（バストアップ・カード用）`,
-      size: bustInfo.size, w: BUST, h: BUST,
-    });
+      .toFile(out);
+    total += info.size;
+    rows.push({ from, to: `guests/${name}.webp`, use: `${label}（立ち絵から自動でバストアップ）`, size: info.size, w: ICON, h: ICON });
+    console.log(`  ${label.padEnd(8)} 立ち絵から自動切り出し → ${ICON}px (${(info.size / 1024).toFixed(0)}KB)`);
+  }
 
-    // 3) 全身版
-    const fullOut = join(DST, `guests/full/${name}.webp`);
-    mkdirSync(dirname(fullOut), { recursive: true });
-    const fullInfo = await sharp(trimmed.data)
-      .resize({ width: Math.min(FULL, tw), withoutEnlargement: true })
+  // 3) 全身版
+  for (const [from, name, label] of GUEST_FULL) {
+    const src = resolveSrc(from);
+    if (!src) { console.log(`  !! 見つかりません: ${from}`); missing++; continue; }
+    const trimmed = await sharp(src).trim({ threshold: 1 }).toBuffer({ resolveWithObject: true });
+    const out = join(DST, `guests/full/${name}.webp`);
+    mkdirSync(dirname(out), { recursive: true });
+    const info = await sharp(trimmed.data)
+      .resize({ width: FULL, withoutEnlargement: true })
       .webp({ quality: 82, effort: 5 })
-      .toFile(fullOut);
-    total += fullInfo.size;
-    rows.push({
-      from, to: `guests/full/${name}.webp`,
-      use: `${label}（全身・主催/解説カード用）`,
-      size: fullInfo.size, w: fullInfo.width, h: fullInfo.height,
-    });
-
-    console.log(
-      `  ${label.padEnd(8)} 絵の実寸 ${String(tw).padStart(4)}x${String(th).padStart(4)}` +
-      `  → バストアップ ${BUST}px (${(bustInfo.size / 1024).toFixed(0)}KB)` +
-      ` / 全身 ${fullInfo.width}x${fullInfo.height} (${(fullInfo.size / 1024).toFixed(0)}KB)`
-    );
+      .toFile(out);
+    total += info.size;
+    rows.push({ from, to: `guests/full/${name}.webp`, use: `${label}（全身・主催/解説カード用）`, size: info.size, w: info.width, h: info.height });
+    console.log(`  ${label.padEnd(8)} 全身版 → ${info.width}x${info.height} (${(info.size / 1024).toFixed(0)}KB)`);
   }
 }
 
@@ -228,7 +250,7 @@ const GUESTS = [
   const COLS = 5;
   const tiles = [];
   let i = 0;
-  for (const [, name] of GUESTS) {
+  for (const [, name] of [...GUEST_AUTOCROP, ...GUEST_ICONS]) {
     const f = join(DST, `guests/${name}.webp`);
     if (!existsSync(f)) continue;
     tiles.push({

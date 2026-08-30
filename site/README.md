@@ -67,21 +67,18 @@ export const AGRELUX = {
 ### 4. 賞品 → `src/data/prizes.ts`
 ### 5. ルール・禁止事項 → `src/data/rules.ts`
 ### 6. スケジュール → `src/data/schedule.ts`
-### 7. クリエイター・大会サポートスタッフ → `src/data/creators.ts`
+### 7. クリエイター・大会サポートスタッフ・賞品制作者 → `src/data/creators.ts`
 
-紹介文は `bio:` に入ります。未入稿の間は `sample(160)` のような
-サンプルテキスト（「サンプルテキスト160文字」を想定文字数まで繰り返したもの）が
-入っているので、原稿が届いたら文字列をそのまま差し替えてください。
+3つの配列があります。
 
-```ts
-{
-  name: '153day様',
-  role: '大会デザイン一式',
-  bio: sample(160),        // ← ここを実際の紹介文に置き換える
-}
-```
+| 配列 | 掲載先 |
+| --- | --- |
+| `CREATORS` | クリエイターページ「クリエイター」 |
+| `MODERATORS` | クリエイターページ「大会サポートスタッフ」 |
+| `PRIZE_CREATORS` | 賞品ページ「主催賞」内の「賞品制作クリエイター」 |
 
-モデレーターは同ファイルの `MODERATORS` 配列で管理しています。
+
+紹介文は `bio:` に入ります。
 
 ### 8. 画像 → `public/assets/`
 
@@ -166,12 +163,8 @@ const BASE = '';                              // サブディレクトリを使�
 | 項目 | 状態 | 更新場所 |
 | --- | --- | --- |
 | エキシビジョン投票フォーム | 「応募フォーム準備中」表示 | `src/data/site.ts` の `EXHIBITION_VOTE.formUrl` |
-| クリエイター各位の紹介文 | サンプルテキスト表示 | `src/data/creators.ts` の `bio:` |
-| 聖夜ノ雪様・虚無ねこ様のキャッチコピー | 「Coming Soon」表示 | `src/data/guests.ts` |
 | トーナメント表 | 「COMING SOON」枠を設置済み | `src/pages/schedule.astro` |
 | AGRelux クーポンコード | 「COMING SOON」チケット表示 | `src/data/sponsors.ts` |
-| スリーアール様プレスリリースURL | 「公開準備中」表示 | `src/data/sponsors.ts` |
-| 沼津麺百式様 ロゴ | 商品バナー画像で代用中 | `public/assets/sponsors/` |
 
 ---
 

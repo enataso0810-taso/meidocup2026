@@ -93,8 +93,17 @@ export const AGRELUX = {
   couponDiscount: '',        // 例: '10%OFF'
   couponValidUntil: '',      // 例: '2026年12月31日まで'
   couponShopUrl: 'https://agrelux.jp/?utm_source=x&utm_medium=soci',
-  pressReleaseUrl: '',       // プレスリリースURL
-  pressReleaseTitle: '',     // プレスリリース見出し
+  pressReleaseUrl: 'https://prtimes.jp/main/html/rd/p/000000186.000111100.html',
+  pressReleaseTitle: '明戸杯2026 協賛に関するプレスリリース（PR TIMES）',
+
+  /* プレスリリース掲載メディア（全30件） */
+  pressMedia: [
+    { group: '新聞・報道', items: ['毎日新聞デジタル', '朝日新聞デジタルマガジン＆[and]', '西日本新聞', '時事ドットコム', '＠S（静岡新聞）'] },
+    { group: 'ビジネス', items: ['東洋経済オンライン', 'JBpress', 'NewsPicks', '@DIME', '財経新聞'] },
+    { group: '総合ニュース・ポータル', items: ['ニコニコニュース', 'ライブドアニュース', 'Infoseekニュース', 'エキサイトニュース', 'Mapionニュース', 'ジョルダンニュース', 'とれまがニュース', 'STRAIGHT PRESS', 'SEOTOOLS', 'BtoBプラットフォーム', 'Merkystyle', 'Mart', "Medery. Character's"] },
+    { group: 'TV', items: ['TBS NEWS DIG', 'テレ東プラス'] },
+    { group: 'ゲーム・エンタメ', items: ['Game Spark', 'iNSIDE', 'アニメ！アニメ！', 'ゲームハック', 'ヘイグ'] },
+  ] as ReadonlyArray<{ group: string; items: readonly string[] }>,
 
   /* 先方提供資料「AGRelux_企業情報・紹介文」④ 紹介文（メイン・約380字）より */
   intro: [

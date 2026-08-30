@@ -107,8 +107,22 @@ const hasCoupon = AGRELUX.couponCode !== '';
             )}
           </div>
 
-          {AGRELUX.pressReleaseTitle && (
-            <p class="pickup__press">{AGRELUX.pressReleaseTitle}</p>
+          {AGRELUX.pressReleaseUrl && (
+            <div class="press">
+              <p class="press__head">
+                <span class="press__tag">PRESS RELEASE</span>
+                掲載メディア 全{AGRELUX.pressMedia.reduce((n, g) => n + g.items.length, 0)}件
+              </p>
+
+              <dl class="press__list">
+                {AGRELUX.pressMedia.map((g) => (
+                  <div>
+                    <dt>{g.group}</dt>
+                    <dd>{g.items.join('／')}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           )}
         </div>
 
@@ -313,7 +327,61 @@ const hasCoupon = AGRELUX.couponCode !== '';
     border-radius: 999px;
     padding: 0.7rem 1.4rem;
   }
-  .pickup__press { margin: 1rem 0 0; font-size: 0.88rem; color: var(--c-gold-light); }
+  /* --- プレスリリース掲載メディア --- */
+  .press {
+    margin-top: 1.6rem;
+    padding: 1.2rem 1.4rem;
+    background: rgba(45, 2, 12, 0.42);
+    border: 1px solid rgba(217, 164, 65, 0.32);
+    border-radius: 3px;
+  }
+  .press__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0 0 0.9rem;
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: var(--c-gold-light);
+  }
+  .press__tag {
+    padding: 0.14rem 0.7rem;
+    font-family: var(--font-en);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    border-radius: 999px;
+    border: 1px solid rgba(217, 164, 65, 0.6);
+    color: var(--c-gold);
+  }
+  .press__list { margin: 0; display: grid; gap: 0.55rem; }
+  .press__list > div {
+    display: grid;
+    grid-template-columns: 10.5em minmax(0, 1fr);
+    gap: 0.9rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px dashed rgba(217, 164, 65, 0.2);
+  }
+  .press__list > div:last-child { border-bottom: 0; padding-bottom: 0; }
+  .press__list dt {
+    font-family: var(--font-mincho);
+    font-weight: 700;
+    font-size: 0.84rem;
+    letter-spacing: 0.06em;
+    color: var(--c-gold);
+  }
+  .press__list dd {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.85;
+    color: rgba(251, 243, 226, 0.8);
+  }
+
+  @media (max-width: 620px) {
+    .press__list > div { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
 
   /* --- クーポン --- */
   .coupon {
