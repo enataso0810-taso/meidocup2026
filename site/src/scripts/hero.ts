@@ -166,14 +166,24 @@ function makeLeafTexture(kind: 'momiji' | 'icho', color: string, edge: string): 
   return finishTexture(cv);
 }
 
-/** 舞い散る葉のバリエーション（紅→橙→金） */
+/**
+ * 舞い散る葉のバリエーション（紅→橙→金）。
+ *
+ * 「楓だけの方が秋らしい」というご意見を受けて、銀杏（icho）は停止しています。
+ * 銀杏を戻したい場合は、末尾のコメントアウトを外してください
+ * （描画側の makeLeafTexture は icho にも対応したままです）。
+ * 銀杏が担っていた金〜山吹の色みは、楓側の 4・5 番目で補っています。
+ */
 const LEAF_VARIANTS: Array<['momiji' | 'icho', string, string]> = [
   ['momiji', '#e8434a', '#a3122a'],
   ['momiji', '#f07a2a', '#c2431a'],
   ['momiji', '#d4232f', '#7d0722'],
-  ['icho', '#f5c542', '#c98c1c'],
-  ['icho', '#ffd97a', '#d9a441'],
+  ['momiji', '#f0a93a', '#c2701a'],
+  ['momiji', '#e8c34a', '#c99a1c'],
   ['momiji', '#ff9a4d', '#d4512a'],
+  // --- 銀杏（停止中。戻す場合はこの2行のコメントを外す）---
+  // ['icho', '#f5c542', '#c98c1c'],
+  // ['icho', '#ffd97a', '#d9a441'],
 ];
 
 /** 丸いソフト粒子テクスチャ */
