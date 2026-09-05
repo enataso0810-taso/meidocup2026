@@ -99,16 +99,16 @@ const steps = [
     </div>
   </section>
 
-  {/* ===== 山本の米 紹介 ===== */}
+  {/* ===== 山本様 紹介 ===== */}
   <section class="section">
     <div class="shell">
       <div class="yamamoto washi corner-key reveal">
         <div class="yamamoto__figure">
           <img
             src={withBase('assets/exhibition/yamamoto-san.webp')}
-            alt="米屋の山本さん"
+            alt="山本様"
             width="620"
-            height="877"
+            height="690"
             loading="lazy"
             decoding="async"
           />
@@ -116,15 +116,15 @@ const steps = [
 
         <div class="yamamoto__body">
           <p class="ribbon ribbon-gold">賞品提供</p>
-          <h2 class="yamamoto__name">米屋の山本さん</h2>
+          <h2 class="yamamoto__name">山本様</h2>
           <p class="yamamoto__lead">
             ダービー賞の「山本の米 新米10kg」をご提供いただいています。
-            お米のことなら山本さんへ。配信もぜひご覧ください。
+            お米のことなら山本様へ。配信もぜひご覧ください。
           </p>
           <SnsLinks
             x="https://x.com/KanameMitsumine"
             youtube="https://www.youtube.com/@米屋の山本/streams"
-            name="米屋の山本"
+            name="山本様"
             onPaper
           />
         </div>
@@ -266,7 +266,7 @@ const steps = [
     color: rgba(251, 243, 226, 0.62);
   }
 
-  /* --- 山本さん紹介 --- */
+  /* --- 山本様 紹介 --- */
   .yamamoto {
     display: grid;
     grid-template-columns: minmax(0, auto) minmax(0, 1fr);
@@ -276,7 +276,7 @@ const steps = [
   }
   .yamamoto__figure { flex: none; }
   .yamamoto__figure img {
-    width: clamp(130px, 20vw, 210px);
+    width: clamp(150px, 23vw, 250px);
     height: auto;
     filter: drop-shadow(0 8px 20px rgba(60, 4, 18, 0.3));
   }

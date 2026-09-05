@@ -45,6 +45,7 @@ function resolveSrc(from) {
      to     : public/assets/ からの相対パス（＝サイト上のファイル名）
      w      : 最大幅（省略時は縮小しない）。元画像より大きい場合は拡大しない
      use    : 対照表に載せる用途
+     opt    : { trim: true } で透明な余白を除去、{ flatten: '#色' } で背景を敷く
    ------------------------------------------------------------------------- */
 const JOBS = [
   ['── ロゴ・背景'],
@@ -70,7 +71,9 @@ const JOBS = [
   ['0830追加分/クリエイター様アイコン画像/浅葱様.png',     'creators/asagi.webp',     400, '浅葱様 アイコン（主催賞 賞品制作）'],
 
   ['── 企業ロゴ'],
-  ['企業協賛/スリーアール株式会社様/01_ロゴ/AGRelux_logo_黒_透過.png', 'sponsors/3r.webp',             560, 'AGRelux ロゴ'],
+  // 元データは 1000×1000 の透過キャンバスに 760×82 のワードマークが載っており、
+  // そのまま使うと極端に小さく表示されるため、透明な余白を取り除いて取り込みます。
+  ['企業協賛/スリーアール株式会社様/01_ロゴ/AGRelux_logo_黒_透過.png', 'sponsors/3r.webp',             800, 'AGRelux ロゴ', { trim: true }],
   ['企業協賛/スリーアール株式会社様/03_ZONIQ/ZONIQ_logo_カラー.png',   'sponsors/zoniq.webp',          400, 'ZONIQ ロゴ'],
   ['企業協賛/木村酒造様/株式会社木村酒造様ロゴ.jpe',                  'sponsors/kimura-shuzo.webp',   560, '株式会社木村酒造様 ロゴ'],
   ['企業協賛/合同会社ウザク式様/-logo.png',                           'sponsors/uzakushiki.webp',     560, 'ウザク式様 ロゴ'],
@@ -86,7 +89,7 @@ const JOBS = [
 
   ['── エキシビジョンマッチ'],
   ['0830追加分/prize_0830.png',                              'prizes/yamamoto-rice.webp',    1200, '山本の米 新米10kg 賞品画像'],
-  ['エキシビジョンマッチ/山本の米/山本さん立ち絵.png',       'exhibition/yamamoto-san.webp',  620, '山本さん 立ち絵'],
+  ['0906追加分/yamamoto.png',                                'exhibition/yamamoto-san.webp',  620, '山本様 立ち絵', { trim: true }],
 
   ['── 協賛紹介画像（賞品カード）'],
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_1位_スリーアール株式会社様.jpg',     'prizes/rank01-3r-agrelux.webp',        1400, '1位 賞品紹介'],
@@ -129,6 +132,8 @@ for (const job of JOBS) {
   mkdirSync(dirname(out), { recursive: true });
 
   let img = sharp(src, { failOn: 'none' });
+  // trim: 透明な余白を先に取り除く（余白の量が絵ごとに違う素材向け）
+  if (opt.trim) img = sharp(await img.trim({ threshold: 1 }).toBuffer());
   const meta = await img.metadata();
   if (width && meta.width && meta.width > width) img = img.resize({ width, withoutEnlargement: true });
   if (opt.flatten) img = img.flatten({ background: opt.flatten });
