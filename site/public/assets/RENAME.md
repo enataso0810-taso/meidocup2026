@@ -2,9 +2,9 @@
 
 `tools/import-assets.mjs` が自動生成しています。手で編集しないでください。
 
-- 生成日時: 2026/8/31 0:15:21
+- 生成日時: 2026/9/5 22:05:31
 - 元素材フォルダ: `素材フォルダ追加含む`
-- 合計: 60 ファイル / 3901 KB
+- 合計: 61 ファイル / 3996 KB
 
 元素材のファイル名は日本語や記号を含み、そのままでは URL に使えないため、
 半角英数のファイル名へ変換したうえで `site/public/assets/` 配下に配置しています。
@@ -85,6 +85,7 @@
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_９〜10位_めりぃぱめりぃ様.jpg` | `public/assets/prizes/rank09-10-merrypamerry.webp` | 9〜10位 賞品紹介 | 1400×788 / 79 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_特別賞_スリーアール株式会社様.jpg` | `public/assets/prizes/special-3r-zoniq.webp` | 集中してたで賞 紹介 | 1400×788 / 79 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_online pâtisserie Lien様_特別賞.jpg` | `public/assets/prizes/special-lien-cookie.webp` | 個人協賛感謝賞 紹介 | 1400×788 / 90 KB |
+| `0905追加分/役満賞.png` | `public/assets/prizes/personal-santanda.webp` | 役満賞 紹介（三反田様） | 1400×788 / 94 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_個人_百軒カナリ様_` | `public/assets/prizes/personal-kanari.webp` | 本日のキュイ賞 紹介 | 1400×788 / 122 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_個人_うくな様_` | `public/assets/prizes/personal-ukuna.webp` | これが国士無双で賞 紹介 | 1400×788 / 108 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_個人_めりぃぱめりぃ様_` | `public/assets/prizes/personal-merrypamerry.webp` | 配信感謝賞 紹介 | 1400×788 / 113 KB |

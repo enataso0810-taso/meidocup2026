@@ -99,6 +99,7 @@ const JOBS = [
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_９〜10位_めりぃぱめりぃ様.jpg',       'prizes/rank09-10-merrypamerry.webp',   1400, '9〜10位 賞品紹介'],
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_特別賞_スリーアール株式会社様.jpg',   'prizes/special-3r-zoniq.webp',         1400, '集中してたで賞 紹介'],
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_online pâtisserie Lien様_特別賞.jpg', 'prizes/special-lien-cookie.webp',      1400, '個人協賛感謝賞 紹介'],
+  ['0905追加分/役満賞.png',                                                      'prizes/personal-santanda.webp',        1400, '役満賞 紹介（三反田様）'],
   ['デザイン周り/協賛紹介画像/協賛紹介_個人_百軒カナリ様_',                      'prizes/personal-kanari.webp',          1400, '本日のキュイ賞 紹介'],
   ['デザイン周り/協賛紹介画像/協賛紹介_個人_うくな様_',                          'prizes/personal-ukuna.webp',           1400, 'これが国士無双で賞 紹介'],
   ['デザイン周り/協賛紹介画像/協賛紹介_個人_めりぃぱめりぃ様_',                  'prizes/personal-merrypamerry.webp',    1400, '配信感謝賞 紹介'],

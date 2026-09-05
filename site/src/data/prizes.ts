@@ -20,6 +20,33 @@ export type Prize = {
   bonusLabel?: string;
 };
 
+/* ---------------------------------------------------------------------------
+   協賛者名 → リンク先の対応表
+   ここに載っている協賛者名は、賞品カード上でリンクになります。
+   キーは各賞の sponsor: に書いた文字列と完全に一致させてください。
+   -------------------------------------------------------------------------- */
+export const SPONSOR_LINKS: Record<string, string> = {
+  // 主催・主催サポート
+  '明戸えな': 'https://x.com/enataso0810',
+  '明戸えな協賛': 'https://x.com/enataso0810',
+  'おしたらあたる協賛': 'https://x.com/oshi_tara_ataru',
+
+  // 個人協賛
+  '百軒カナリ様': 'https://x.com/MMnoki_Chan',
+  'うくな様': 'https://x.com/ukuna_nico',
+  '三反田様': 'https://x.com/santanda35',
+  'めりぃぱめりぃ様': 'https://x.com/merrypamerry',
+  'online pâtisserie Lien様': 'https://x.com/Freria_inverse',
+  '鹿瀬あさ様': 'https://x.com/asa_shikase',
+
+  // 企業協賛
+  'スリーアール株式会社様': 'https://x.com/AGRelux',
+  '株式会社木村酒造様': 'https://x.com/fukukomachi1615',
+  '合同会社ウザク式様': 'https://x.com/mjbook',
+  '横手十文字 奥山商店様': 'https://x.com/okuyama_syouten',
+  '沼津麺百式様': 'https://x.com/100Hiko',
+};
+
 /** ☆上位賞（企業協賛）☆ */
 export const RANK_PRIZES: Prize[] = [
   {
@@ -133,7 +160,9 @@ export const PERSONAL_PRIZES: Prize[] = [
     title: '役満賞',
     item: 'オリジナル麻雀牌',
     condition: '役満を出した方の中から抽選で10名。数え役満も可',
+    note: '※10名未満の場合は該当者全員にもれなくプレゼント！',
     sponsor: '三反田様',
+    image: 'personal-santanda.webp',
   },
   {
     rank: '個人協賛賞',

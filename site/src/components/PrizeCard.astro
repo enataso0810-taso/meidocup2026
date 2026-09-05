@@ -1,10 +1,12 @@
 ---
 import type { Prize } from '../data/prizes';
+import { SPONSOR_LINKS } from '../data/prizes';
 import { withBase } from '../lib/path';
 interface Props { prize: Prize; tone?: 'gold' | 'teal' | 'crimson'; }
 const { prize, tone = 'gold' } = Astro.props;
 const img = prize.image ? withBase(`assets/prizes/${prize.image}`) : null;
 const bonus = prize.bonusImage ? withBase(`assets/prizes/${prize.bonusImage}`) : null;
+const sponsorUrl = SPONSOR_LINKS[prize.sponsor];
 ---
 
 <article class:list={['prize', `prize--${tone}`, 'reveal']}>
@@ -33,7 +35,16 @@ const bonus = prize.bonusImage ? withBase(`assets/prizes/${prize.bonusImage}`) :
       <p class="prize__cond"><span>条件</span>{prize.condition}</p>
     )}
     {prize.note && <p class="prize__note">{prize.note}</p>}
-    <p class="prize__sponsor"><span>協賛</span>{prize.sponsor}</p>
+    <p class="prize__sponsor">
+      <span>協賛</span>
+      {sponsorUrl ? (
+        <a href={sponsorUrl} target="_blank" rel="noopener noreferrer">
+          {prize.sponsor}<span class="prize__ext" aria-hidden="true">↗</span>
+        </a>
+      ) : (
+        prize.sponsor
+      )}
+    </p>
   </div>
 </article>
 
@@ -147,6 +158,19 @@ const bonus = prize.bonusImage ? withBase(`assets/prizes/${prize.bonusImage}`) :
     color: var(--c-teal-deep);
     border: 1px solid rgba(14, 124, 110, 0.3);
   }
-  .prize__sponsor span { background: rgba(200, 16, 60, 0.1); color: var(--c-crimson-deep); border-color: rgba(200, 16, 60, 0.26); }
+  .prize__sponsor > span:first-child { background: rgba(200, 16, 60, 0.1); color: var(--c-crimson-deep); border-color: rgba(200, 16, 60, 0.26); }
+  .prize__sponsor a {
+    color: var(--c-teal-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prize__sponsor a:hover { color: var(--c-crimson); }
+  .prize__ext {
+    margin-left: 0.3rem;
+    font-size: 0.8em;
+    background: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+  }
   .prize__note { margin: 0; font-size: 0.8rem; line-height: 1.7; color: var(--c-ink-soft); }
 </style>

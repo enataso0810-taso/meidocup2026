@@ -41,6 +41,7 @@ export const SCHEDULE: ScheduleItem[] = [
     detail: ['トーナメント終了', '※エキシビジョンマッチダービーの投票締め切り'],
     kind: 'match',
   },
+  { time: '', title: '休憩', sub: '10分間', kind: 'break' },
   { time: '', title: '秋のエキシビジョンマッチ', kind: 'exhibition' },
   { time: '', title: '各抽選の当選発表とトーナメント表彰式', detail: ['終了'], kind: 'award' },
 ];
