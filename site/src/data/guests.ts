@@ -141,7 +141,7 @@ export const INVITED: Person[] = [
   },
   {
     name: '百軒カナリ',
-    catch: '「和良、明るくなったろう」',
+    catch: '「和了、明るくなったろう」',
     image: 'momonoki-kanari.webp',
     x: 'https://x.com/MMnoki_Chan',
     youtube: 'https://www.youtube.com/@Momonoki_Kanari',
