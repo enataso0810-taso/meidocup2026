@@ -40,16 +40,24 @@ export const EVENT = {
    もし締切を設ける場合は ISO8601 で日時を入れると、
    ホーム／エキシビジョンページに自動でカウントダウンが表示されます。
    ------------------------------------------------------------------------ */
-export const EXHIBITION_VOTE = {
+type ExhibitionVote = {
   /** Googleフォームの公開URL。空文字の場合は「準備中」表示になります */
-  formUrl: '',
+  formUrl: string;
   /** 締切日時。空文字なら締切カウントダウンを出しません */
-  deadlineAt: '',
+  deadlineAt: string;
   /** 受付期間の案内文 */
-  note: 'エキシビジョンマッチ開始前まで受付',
+  note: string;
   /** 誰でも投票できることの案内 */
+  openTo: string;
+};
+
+export const EXHIBITION_VOTE: ExhibitionVote = {
+  formUrl:
+    'https://docs.google.com/forms/d/e/1FAIpQLSflNmnOZ-nPii-bpD9MrCKWb5-wqYZxsFwJ6suNW9QmI8Fnlg/viewform',
+  deadlineAt: '',
+  note: 'エキシビジョンマッチ開始前まで受付',
   openTo: '大会に参加していない方（観戦のみの方）もご投票いただけます。',
-} as const;
+};
 
 /* --- ナビゲーション ------------------------------------------------------ */
 export const NAV = [
