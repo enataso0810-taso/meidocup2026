@@ -59,6 +59,15 @@ export const EXHIBITION_VOTE: ExhibitionVote = {
   openTo: '大会に参加していない方（観戦のみの方）もご投票いただけます。',
 };
 
+/* --- トーナメント表 --------------------------------------------------------
+   別リポジトリで公開しているトーナメント表アプリを iframe で埋め込みます。
+   url を空文字にすると「COMING SOON」のプレースホルダー表示に戻ります。
+   ------------------------------------------------------------------------ */
+export const BRACKET: { url: string; note: string } = {
+  url: 'https://ginka1108.github.io/meidoena-tournament/',
+  note: '対局の進行にあわせて随時更新されます。',
+};
+
 /* --- ナビゲーション ------------------------------------------------------ */
 export const NAV = [
   { href: '/', label: 'ホーム', en: 'HOME' },

@@ -45,6 +45,7 @@ export const SPONSOR_LINKS: Record<string, string> = {
   '合同会社ウザク式様': 'https://x.com/mjbook',
   '横手十文字 奥山商店様': 'https://x.com/okuyama_syouten',
   '沼津麺百式様': 'https://x.com/100Hiko',
+  '麻雀雑貨Lemo様': 'https://x.com/lemonsalmon0122',
 };
 
 /** ☆上位賞（企業協賛）☆ */

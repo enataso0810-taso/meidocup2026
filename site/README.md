@@ -95,22 +95,25 @@ npm run assets
 
 ---
 
-## トーナメント表の差し込み
+## トーナメント表
 
-`src/pages/schedule.astro` の一番下、`id="bracket"` 相当のセクションに
-「COMING SOON」のプレースホルダーを置いてあります。
-抽選結果が出たら、`.bracket__overlay` のブロックを削除し、
-`.bracket__ghost` を実際のトーナメント表（画像 or HTML）に置き換えてください。
+別リポジトリで公開しているトーナメント表アプリを、スケジュールページに iframe で
+埋め込んでいます。対局の進行にあわせて更新される様子がそのまま表示されます。
 
-画像で差し込む場合は `public/assets/` に `bracket.png` などを置き、
+設定は `src/data/site.ts` の `BRACKET` にまとまっています。
 
-```astro
-<div class="bracket washi corner-key">
-  <img src={withBase('assets/bracket.png')} alt="明戸杯2026 トーナメント表" />
-</div>
+```ts
+export const BRACKET = {
+  url: 'https://ginka1108.github.io/meidoena-tournament/',
+  note: '対局の進行にあわせて随時更新されます。',
+};
 ```
 
-のように書き換えるのが最も簡単です。
+`url` を空文字にすると、抽選前の「COMING SOON」プレースホルダー表示に戻ります。
+
+> **埋め込みの前提**：埋め込み先が `X-Frame-Options` や CSP の `frame-ancestors` を
+> 返していると iframe に表示できません。GitHub Pages はこれらを付与しないため
+> 現状は問題なく表示できています。別のホスティングに移す場合はご注意ください。
 
 ---
 
@@ -162,8 +165,6 @@ const BASE = '';                              // サブディレクトリを使�
 
 | 項目 | 状態 | 更新場所 |
 | --- | --- | --- |
-| エキシビジョン投票フォーム | 「応募フォーム準備中」表示 | `src/data/site.ts` の `EXHIBITION_VOTE.formUrl` |
-| トーナメント表 | 「COMING SOON」枠を設置済み | `src/pages/schedule.astro` |
 | AGRelux クーポンコード | 「COMING SOON」チケット表示 | `src/data/sponsors.ts` |
 
 ---

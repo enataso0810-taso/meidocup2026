@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Countdown from '../components/Countdown.astro';
 import { SCHEDULE, SCHEDULE_NOTE } from '../data/schedule';
-import { EVENT } from '../data/site';
+import { EVENT, BRACKET } from '../data/site';
 import { withBase } from '../lib/path';
 
 const KIND_LABEL: Record<string, string> = {
@@ -91,34 +91,60 @@ const KIND_LABEL: Record<string, string> = {
     </div>
   </section>
 
-  {/* ===== トーナメント表（後日公開） ===== */}
+  {/* ===== トーナメント表 ===== */}
   <section class="section">
     <div class="shell">
       <SectionHead
         title="トーナメント表"
         en="BRACKET"
-        lead="組み合わせ抽選の結果が確定次第、こちらにトーナメント表を掲載します。"
+        lead={
+          BRACKET.url
+            ? `組み合わせと対局結果はこちら。${BRACKET.note}`
+            : '組み合わせ抽選の結果が確定次第、こちらにトーナメント表を掲載します。'
+        }
       />
 
-      <div class="bracket washi corner-key reveal">
-        <div class="bracket__ghost" aria-hidden="true">
-          {[0, 1, 2].map((col) => (
-            <div class="bracket__col">
-              {Array.from({ length: [4, 2, 1][col]! }).map(() => (
-                <div class="bracket__slot"><span></span><span></span></div>
+      {
+        BRACKET.url ? (
+          <div class="bracket reveal">
+            <div class="bracket__frame">
+              <iframe
+                src={BRACKET.url}
+                title="明戸杯2026 トーナメント表"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
+            </div>
+
+            <p class="bracket__foot">
+              <span class="bracket__hint">スマートフォンでは全画面表示のほうが見やすくなります。</span>
+              <a class="btn btn-ghost bracket__open" href={BRACKET.url} target="_blank" rel="noopener noreferrer">
+                トーナメント表を全画面で開く<span aria-hidden="true">↗</span>
+              </a>
+            </p>
+          </div>
+        ) : (
+          <div class="bracket bracket--tbd washi corner-key reveal">
+            <div class="bracket__ghost" aria-hidden="true">
+              {[0, 1, 2].map((col) => (
+                <div class="bracket__col">
+                  {Array.from({ length: [4, 2, 1][col]! }).map(() => (
+                    <div class="bracket__slot"><span></span><span></span></div>
+                  ))}
+                </div>
               ))}
             </div>
-          ))}
-        </div>
 
-        <div class="bracket__overlay">
-          <p class="ribbon ribbon-gold">COMING SOON</p>
-          <p class="bracket__msg">
-            トーナメント表は<strong>抽選後に公開</strong>いたします。<br />
-            決まり次第このスペースに掲載しますので、当日までお待ちください。
-          </p>
-        </div>
-      </div>
+            <div class="bracket__overlay">
+              <p class="ribbon ribbon-gold">COMING SOON</p>
+              <p class="bracket__msg">
+                トーナメント表は<strong>抽選後に公開</strong>いたします。<br />
+                決まり次第このスペースに掲載しますので、当日までお待ちください。
+              </p>
+            </div>
+          </div>
+        )
+      }
     </div>
   </section>
 </Base>
@@ -263,8 +289,37 @@ const KIND_LABEL: Record<string, string> = {
   .tl__detail li { font-size: 0.88rem; line-height: 1.8; color: rgba(251, 243, 226, 0.82); }
   .tl__note { margin-top: 1.6rem; }
 
-  /* --- トーナメント表プレースホルダー --- */
-  .bracket { position: relative; padding: clamp(2rem, 6vw, 3.5rem) clamp(1.2rem, 4vw, 3rem); overflow: hidden; }
+  /* --- トーナメント表（iframe 埋め込み） --- */
+  .bracket__frame {
+    position: relative;
+    border: 1px solid rgba(217, 164, 65, 0.55);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--c-crimson-dark);
+    box-shadow: var(--shadow-card);
+    /* 埋め込み先はビューポート全体を使うアプリなので、高さは十分に確保する */
+    height: clamp(520px, 76vh, 820px);
+  }
+  .bracket__frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .bracket__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem 1.2rem;
+    margin: 1rem 0 0;
+  }
+  .bracket__hint { font-size: 0.85rem; color: rgba(251, 243, 226, 0.68); }
+  .bracket__open { display: inline-flex; gap: 0.45rem; padding: 0.6rem 1.4rem; font-size: 0.92rem; }
+
+  /* --- トーナメント表プレースホルダー（未公開時） --- */
+  .bracket--tbd { position: relative; padding: clamp(2rem, 6vw, 3.5rem) clamp(1.2rem, 4vw, 3rem); overflow: hidden; }
   .bracket__ghost {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
