@@ -33,7 +33,7 @@ export const SCHEDULE: ScheduleItem[] = [
   { time: '', title: '予選 2回戦', sub: '東風戦', advance: '1,2位勝ち上がり', kind: 'match' },
   { time: '', title: '予選 3回戦', sub: '半荘戦', advance: '1,2位勝ち上がり', kind: 'match' },
   { time: '', title: '休憩', sub: '10分間', kind: 'break' },
-  { time: '', title: '準決勝', sub: '半荘戦', advance: '1,2位勝ち上がり', kind: 'match' },
+  { time: '', title: '準決勝', sub: '半荘戦', advance: '1位勝ち上がり', kind: 'match' },
   {
     time: '',
     title: '決勝',
