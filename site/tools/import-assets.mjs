@@ -75,6 +75,8 @@ const JOBS = [
   // そのまま使うと極端に小さく表示されるため、透明な余白を取り除いて取り込みます。
   ['企業協賛/スリーアール株式会社様/01_ロゴ/AGRelux_logo_黒_透過.png', 'sponsors/3r.webp',             800, 'AGRelux ロゴ', { trim: true }],
   ['企業協賛/スリーアール株式会社様/03_ZONIQ/ZONIQ_logo_カラー.png',   'sponsors/zoniq.webp',          400, 'ZONIQ ロゴ'],
+  // QRコードは階調を落とすと読み取れなくなるため、縮小せず PNG のまま配置する
+  ['0910追加分/MEIDO2026_QR_.png',                                    'sponsors/agrelux-coupon-qr.png', 0, 'AGRelux 明戸杯2026記念クーポン QRコード'],
   ['企業協賛/木村酒造様/株式会社木村酒造様ロゴ.jpe',                  'sponsors/kimura-shuzo.webp',   560, '株式会社木村酒造様 ロゴ'],
   ['企業協賛/合同会社ウザク式様/-logo.png',                           'sponsors/uzakushiki.webp',     560, 'ウザク式様 ロゴ'],
   ['企業協賛/合資会社奥山商店様/企業ロゴ.png',                        'sponsors/okuyama-shoten.webp', 560, '合資会社奥山商店様 ロゴ'],

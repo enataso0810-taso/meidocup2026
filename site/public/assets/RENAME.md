@@ -2,9 +2,9 @@
 
 `tools/import-assets.mjs` が自動生成しています。手で編集しないでください。
 
-- 生成日時: 2026/9/6 8:14:23
+- 生成日時: 2026/9/10 21:22:29
 - 元素材フォルダ: `素材フォルダ追加含む`
-- 合計: 61 ファイル / 4004 KB
+- 合計: 62 ファイル / 4006 KB
 
 元素材のファイル名は日本語や記号を含み、そのままでは URL に使えないため、
 半角英数のファイル名へ変換したうえで `site/public/assets/` 配下に配置しています。
@@ -49,6 +49,7 @@
 | --- | --- | --- | --- |
 | `企業協賛/スリーアール株式会社様/01_ロゴ/AGRelux_logo_黒_透過.png` | `public/assets/sponsors/3r.webp` | AGRelux ロゴ | 760×82 / 10 KB |
 | `企業協賛/スリーアール株式会社様/03_ZONIQ/ZONIQ_logo_カラー.png` | `public/assets/sponsors/zoniq.webp` | ZONIQ ロゴ | 400×55 / 9 KB |
+| `0910追加分/MEIDO2026_QR_.png` | `public/assets/sponsors/agrelux-coupon-qr.png` | AGRelux 明戸杯2026記念クーポン QRコード | 656×656 / 2 KB |
 | `企業協賛/木村酒造様/株式会社木村酒造様ロゴ.jpe` | `public/assets/sponsors/kimura-shuzo.webp` | 株式会社木村酒造様 ロゴ | 560×560 / 67 KB |
 | `企業協賛/合同会社ウザク式様/-logo.png` | `public/assets/sponsors/uzakushiki.webp` | ウザク式様 ロゴ | 560×373 / 4 KB |
 | `企業協賛/合資会社奥山商店様/企業ロゴ.png` | `public/assets/sponsors/okuyama-shoten.webp` | 合資会社奥山商店様 ロゴ | 560×560 / 25 KB |

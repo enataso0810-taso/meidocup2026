@@ -80,7 +80,31 @@ export const SPONSORS: Sponsor[] = [
    クーポンコード・プレスリリースURLが確定したらここを書き換えてください。
    couponCode を '' にすると、クーポン欄は非表示になります。
    ------------------------------------------------------------------------ */
-export const AGRELUX = {
+type Agrelux = {
+  brand: string;
+  tagline: string;
+  concept: string;
+  logo: string;
+  zoniqLogo: string;
+  /** クーポンコード。空文字にすると「COMING SOON」表示に戻ります */
+  couponCode: string;
+  couponDiscount: string;
+  /** 有効期限。空文字なら非表示 */
+  couponValidUntil: string;
+  /** クーポンの対象範囲などの補足。空文字なら非表示 */
+  couponNote: string;
+  /** public/assets/sponsors/ 配下のQRコード画像。空文字なら非表示 */
+  couponQr: string;
+  couponShopUrl: string;
+  pressReleaseUrl: string;
+  pressReleaseTitle: string;
+  pressMedia: ReadonlyArray<{ group: string; items: readonly string[] }>;
+  intro: readonly string[];
+  zoniqIntro: string;
+  zoniqCatch: string;
+};
+
+export const AGRELUX: Agrelux = {
   /** ブランド表記（先方指定の名義） */
   brand: 'AGRelux（アグリラックス）',
   /** タグライン。コンセプトとセットで見せる指定 */
@@ -89,10 +113,13 @@ export const AGRELUX = {
   logo: '3r.webp',
   zoniqLogo: 'zoniq.webp',
 
-  couponCode: '',            // 例: 'AKEDO2026'
-  couponDiscount: '',        // 例: '10%OFF'
-  couponValidUntil: '',      // 例: '2026年12月31日まで'
-  couponShopUrl: 'https://agrelux.jp/?utm_source=x&utm_medium=soci',
+  /* --- 明戸杯2026記念クーポン --- */
+  couponCode: 'MEIDO2026',
+  couponDiscount: '10%OFF',
+  couponValidUntil: '',
+  couponNote: 'AGRelux・ZONIQ の両方にご利用いただけます。',
+  couponQr: 'agrelux-coupon-qr.png',
+  couponShopUrl: 'https://agrelux.jp/',
   pressReleaseUrl: 'https://prtimes.jp/main/html/rd/p/000000186.000111100.html',
   pressReleaseTitle: '明戸杯2026 協賛に関するプレスリリース（PR TIMES）',
 
@@ -117,4 +144,4 @@ export const AGRELUX = {
   zoniqIntro:
     'ZONIQ（ゾニック）は、AGRelux が手がける集中系サプリメント（一般食品）です。カフェインとロディオラを配合し、「オンに切り替えたい時の集中サポート」をコンセプトにした、においが気にならないハードカプセルタイプ。日本製・GMP認定工場製造・砂糖不使用。決勝戦・秋のエキシビションマッチの「集中してたで賞」としてお贈りします。',
   zoniqCatch: '集中を、味方に。── ZONIQ（集中系サプリメント／一般食品）',
-} as const;
+};

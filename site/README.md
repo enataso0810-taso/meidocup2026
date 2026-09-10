@@ -56,11 +56,13 @@ export const EXHIBITION_VOTE = {
 プレスリリースURLを設定できます。
 
 ```ts
-export const AGRELUX = {
-  couponCode: '',        // ← 空文字だとクーポン欄が「COMING SOON」表示になります
-  couponDiscount: '',    // 例: '10%OFF'
-  couponValidUntil: '',  // 例: '2026年12月31日まで'
-  pressReleaseUrl: '',   // ← 記入するとボタンが出ます
+export const AGRELUX: Agrelux = {
+  couponCode: 'MEIDO2026',   // ← 空文字にするとクーポン欄が「COMING SOON」表示に戻ります
+  couponDiscount: '10%OFF',
+  couponValidUntil: '',      // 例: '2026年12月31日まで'（空文字なら非表示）
+  couponNote: 'AGRelux・ZONIQ の両方にご利用いただけます。',
+  couponQr: 'agrelux-coupon-qr.png',  // public/assets/sponsors/ 配下（空文字なら非表示）
+  couponShopUrl: 'https://agrelux.jp/',
 };
 ```
 
@@ -161,11 +163,8 @@ const BASE = '';                              // サブディレクトリを使�
 
 ### 未確定・要確認の項目
 
-サイト上ではプレースホルダー表示になっています。確定したら該当ファイルを更新してください。
-
-| 項目 | 状態 | 更新場所 |
-| --- | --- | --- |
-| AGRelux クーポンコード | 「COMING SOON」チケット表示 | `src/data/sponsors.ts` |
+現在、プレースホルダー表示になっている箇所はありません。
+（投票フォーム・トーナメント表・クーポンはすべて公開済みです）
 
 ---
 

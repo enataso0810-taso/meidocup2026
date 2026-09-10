@@ -140,10 +140,27 @@ const hasCoupon = AGRELUX.couponCode !== '';
                   <code id="coupon-code">{AGRELUX.couponCode}</code>
                   <button class="coupon__copy" type="button" data-code={AGRELUX.couponCode}>コピー</button>
                 </div>
+                {AGRELUX.couponNote && <p class="coupon__note">{AGRELUX.couponNote}</p>}
                 {AGRELUX.couponValidUntil && <p class="coupon__until">{AGRELUX.couponValidUntil}</p>}
+
+                {AGRELUX.couponQr && (
+                  <a class="coupon__qr" href={AGRELUX.couponShopUrl} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={withBase(`assets/sponsors/${AGRELUX.couponQr}`)}
+                      alt={`AGRelux 明戸杯2026記念クーポン（${AGRELUX.couponCode}）のQRコード`}
+                      width="656"
+                      height="656"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span>スマートフォンで読み取る</span>
+                  </a>
+                )}
+
                 <a class="btn btn-teal coupon__btn" href={AGRELUX.couponShopUrl} target="_blank" rel="noopener noreferrer">
-                  クーポンを使う
+                  AGRelux公式サイトで使う
                 </a>
+                <p class="coupon__url">{AGRELUX.couponShopUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}</p>
               </>
             ) : (
               <>
@@ -455,7 +472,43 @@ const hasCoupon = AGRELUX.couponCode !== '';
   }
   .coupon__copy:hover { background: var(--c-teal-deep); }
   .coupon__copy.is-done { background: var(--c-gold); border-color: var(--c-gold); color: #4a2606; }
-  .coupon__until { margin: 0 0 1rem; font-size: 0.78rem; color: var(--c-ink-soft); }
+  .coupon__note {
+    margin: 0 0 0.5rem;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--c-teal-deep);
+    font-weight: 500;
+  }
+  .coupon__until { margin: 0 0 0.5rem; font-size: 0.78rem; color: var(--c-ink-soft); }
+
+  /* --- クーポンQRコード --- */
+  .coupon__qr {
+    display: grid;
+    justify-items: center;
+    gap: 0.45rem;
+    margin: 0.9rem 0 1rem;
+    color: var(--c-ink-soft);
+  }
+  .coupon__qr img {
+    width: clamp(140px, 52%, 180px);
+    height: auto;
+    padding: 7px;
+    background: #fff;
+    border: 1px solid rgba(90, 43, 36, 0.22);
+    border-radius: 3px;
+    /* QRは階調補間で読み取り精度が落ちるため、ドットを保ったまま拡縮する */
+    image-rendering: pixelated;
+  }
+  .coupon__qr span { font-size: 0.74rem; letter-spacing: 0.06em; }
+  .coupon__qr:hover { color: var(--c-crimson); }
+
+  .coupon__url {
+    margin: 0.6rem 0 0;
+    font-family: var(--font-en);
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    color: var(--c-ink-soft);
+  }
   .coupon__btn { width: 100%; }
   .coupon__pending { margin: 0; font-size: 0.85rem; line-height: 1.9; color: var(--c-ink-soft); }
 
