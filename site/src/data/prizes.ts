@@ -42,7 +42,7 @@ export const SPONSOR_LINKS: Record<string, string> = {
   // 企業協賛
   'スリーアール株式会社様': 'https://x.com/AGRelux',
   '株式会社木村酒造様': 'https://x.com/fukukomachi1615',
-  '合同会社ウザク式様': 'https://x.com/mjbook',
+  'ウザク式様': 'https://x.com/mjbook',
   '横手十文字 奥山商店様': 'https://x.com/okuyama_syouten',
   '沼津麺百式様': 'https://x.com/100Hiko',
   '麻雀雑貨Lemo様': 'https://x.com/lemonsalmon0122',
@@ -72,7 +72,7 @@ export const RANK_PRIZES: Prize[] = [
     rank: '3位',
     item: 'ウザク式何切る問題集 全巻セット（4冊セット）',
     note: 'はじめの書以外の書籍です。',
-    sponsor: '合同会社ウザク式様',
+    sponsor: 'ウザク式様',
     image: 'rank03-uzakushiki.webp',
     bonusImage: 'trophy-bronze.webp',
     bonusLabel: 'トロフィーアクキー（銅）',

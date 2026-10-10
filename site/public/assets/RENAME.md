@@ -2,9 +2,9 @@
 
 `tools/import-assets.mjs` が自動生成しています。手で編集しないでください。
 
-- 生成日時: 2026/9/10 21:22:29
+- 生成日時: 2026/10/10 13:55:52
 - 元素材フォルダ: `素材フォルダ追加含む`
-- 合計: 62 ファイル / 4006 KB
+- 合計: 62 ファイル / 4029 KB
 
 元素材のファイル名は日本語や記号を含み、そのままでは URL に使えないため、
 半角英数のファイル名へ変換したうえで `site/public/assets/` 配下に配置しています。
@@ -101,7 +101,7 @@
 | `0830追加分/アイコンサイズ透過素材/聖夜ノ雪.png` | `public/assets/guests/holy-night-snow.webp` | 聖夜ノ雪（アイコン・調整済みデータ） | 640×640 / 92 KB |
 | `0830追加分/アイコンサイズ透過素材/大和ちとせ.png` | `public/assets/guests/yamato-chitose.webp` | 大和ちとせ（アイコン・調整済みデータ） | 640×640 / 69 KB |
 | `0830追加分/アイコンサイズ透過素材/あかるん.png` | `public/assets/guests/akarun.webp` | あかるん（アイコン・調整済みデータ） | 640×640 / 110 KB |
-| `0830追加分/アイコンサイズ透過素材/虚無ねこ.png` | `public/assets/guests/kyomuneko.webp` | 虚無ねこ（アイコン・調整済みデータ） | 640×640 / 64 KB |
+| `1010追加分/虚無ねこ変更.png` | `public/assets/guests/kyomuneko.webp` | 虚無ねこ（アイコン・調整済みデータ） | 640×640 / 87 KB |
 | `0830追加分/アイコンサイズ透過素材/百軒カナリ.png` | `public/assets/guests/momonoki-kanari.webp` | 百軒カナリ（アイコン・調整済みデータ） | 640×640 / 65 KB |
 | `0830追加分/アイコンサイズ透過素材/うくな.png` | `public/assets/guests/ukuna.webp` | うくな（アイコン・調整済みデータ） | 640×640 / 93 KB |
 | `大会キービジュアル/meidoena.png` | `public/assets/guests/akedo-ena.webp` | 明戸えな（立ち絵から自動でバストアップ） | 640×640 / 60 KB |
