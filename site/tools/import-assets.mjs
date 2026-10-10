@@ -96,7 +96,7 @@ const JOBS = [
   ['── 協賛紹介画像（賞品カード）'],
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_1位_スリーアール株式会社様.jpg',     'prizes/rank01-3r-agrelux.webp',        1400, '1位 賞品紹介'],
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_2位_株式会社木村酒造様.jpg',         'prizes/rank02-kimura-shuzo.webp',      1400, '2位 賞品紹介'],
-  ['デザイン周り/協賛紹介画像/協賛紹介_企業_3位_合同会社ウザク式様.jpg',         'prizes/rank03-uzakushiki.webp',        1400, '3位 賞品紹介'],
+  ['1010追加分/ウザク式様修正.webp',                                             'prizes/rank03-uzakushiki.webp',        1400, '3位 賞品紹介'],
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_4位_合資会社奥山商店様.jpg',         'prizes/rank04-okuyama-shoten.webp',    1400, '4位 賞品紹介'],
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_5位_online pâtisserie Lien様.jpg',   'prizes/rank05-lien.webp',              1400, '5位 賞品紹介'],
   ['デザイン周り/協賛紹介画像/協賛紹介_企業_6〜7位_沼津麺百式様.jpg',            'prizes/rank06-07-men-hyakushiki.webp', 1400, '6〜7位 賞品紹介'],

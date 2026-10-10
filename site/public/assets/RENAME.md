@@ -2,9 +2,9 @@
 
 `tools/import-assets.mjs` が自動生成しています。手で編集しないでください。
 
-- 生成日時: 2026/10/10 13:55:52
+- 生成日時: 2026/10/10 14:12:13
 - 元素材フォルダ: `素材フォルダ追加含む`
-- 合計: 62 ファイル / 4029 KB
+- 合計: 62 ファイル / 4020 KB
 
 元素材のファイル名は日本語や記号を含み、そのままでは URL に使えないため、
 半角英数のファイル名へ変換したうえで `site/public/assets/` 配下に配置しています。
@@ -78,7 +78,7 @@
 | --- | --- | --- | --- |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_1位_スリーアール株式会社様.jpg` | `public/assets/prizes/rank01-3r-agrelux.webp` | 1位 賞品紹介 | 1400×788 / 78 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_2位_株式会社木村酒造様.jpg` | `public/assets/prizes/rank02-kimura-shuzo.webp` | 2位 賞品紹介 | 1400×788 / 122 KB |
-| `デザイン周り/協賛紹介画像/協賛紹介_企業_3位_合同会社ウザク式様.jpg` | `public/assets/prizes/rank03-uzakushiki.webp` | 3位 賞品紹介 | 1400×788 / 102 KB |
+| `1010追加分/ウザク式様修正.webp` | `public/assets/prizes/rank03-uzakushiki.webp` | 3位 賞品紹介 | 1400×788 / 92 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_4位_合資会社奥山商店様.jpg` | `public/assets/prizes/rank04-okuyama-shoten.webp` | 4位 賞品紹介 | 1400×788 / 75 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_5位_online pâtisserie Lien様.jpg` | `public/assets/prizes/rank05-lien.webp` | 5位 賞品紹介 | 1400×788 / 123 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_6〜7位_沼津麺百式様.jpg` | `public/assets/prizes/rank06-07-men-hyakushiki.webp` | 6〜7位 賞品紹介 | 1400×788 / 94 KB |
