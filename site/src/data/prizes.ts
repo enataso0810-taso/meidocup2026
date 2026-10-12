@@ -103,7 +103,7 @@ export const RANK_PRIZES: Prize[] = [
   },
   {
     rank: '9〜10位',
-    item: '麻雀モチーフ雑貨',
+    item: '麻雀モチーフのハンドメイドセット(ランダム)',
     sponsor: 'めりぃぱめりぃ様',
     image: 'rank09-10-merrypamerry.webp',
   },

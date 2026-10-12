@@ -2,9 +2,9 @@
 
 `tools/import-assets.mjs` が自動生成しています。手で編集しないでください。
 
-- 生成日時: 2026/10/10 14:12:13
+- 生成日時: 2026/10/12 10:11:45
 - 元素材フォルダ: `素材フォルダ追加含む`
-- 合計: 62 ファイル / 4020 KB
+- 合計: 62 ファイル / 4018 KB
 
 元素材のファイル名は日本語や記号を含み、そのままでは URL に使えないため、
 半角英数のファイル名へ変換したうえで `site/public/assets/` 配下に配置しています。
@@ -80,12 +80,12 @@
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_2位_株式会社木村酒造様.jpg` | `public/assets/prizes/rank02-kimura-shuzo.webp` | 2位 賞品紹介 | 1400×788 / 122 KB |
 | `1010追加分/ウザク式様修正.webp` | `public/assets/prizes/rank03-uzakushiki.webp` | 3位 賞品紹介 | 1400×788 / 92 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_4位_合資会社奥山商店様.jpg` | `public/assets/prizes/rank04-okuyama-shoten.webp` | 4位 賞品紹介 | 1400×788 / 75 KB |
-| `デザイン周り/協賛紹介画像/協賛紹介_企業_5位_online pâtisserie Lien様.jpg` | `public/assets/prizes/rank05-lien.webp` | 5位 賞品紹介 | 1400×788 / 123 KB |
+| `1012追加分/5_online_patisserie_Lien.png` | `public/assets/prizes/rank05-lien.webp` | 5位 賞品紹介 | 1400×788 / 104 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_6〜7位_沼津麺百式様.jpg` | `public/assets/prizes/rank06-07-men-hyakushiki.webp` | 6〜7位 賞品紹介 | 1400×788 / 94 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_個人_8位_麻雀雑貨Lemo様` | `public/assets/prizes/rank08-lemo.webp` | 8位 賞品紹介 | 1400×788 / 89 KB |
-| `デザイン周り/協賛紹介画像/協賛紹介_企業_９〜10位_めりぃぱめりぃ様.jpg` | `public/assets/prizes/rank09-10-merrypamerry.webp` | 9〜10位 賞品紹介 | 1400×788 / 79 KB |
+| `1012追加分/めりぃぱめりぃ.png` | `public/assets/prizes/rank09-10-merrypamerry.webp` | 9〜10位 賞品紹介 | 1400×788 / 93 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_企業_特別賞_スリーアール株式会社様.jpg` | `public/assets/prizes/special-3r-zoniq.webp` | 集中してたで賞 紹介 | 1400×788 / 79 KB |
-| `デザイン周り/協賛紹介画像/協賛紹介_企業_online pâtisserie Lien様_特別賞.jpg` | `public/assets/prizes/special-lien-cookie.webp` | 個人協賛感謝賞 紹介 | 1400×788 / 90 KB |
+| `1012追加分/個人協賛感謝賞.png` | `public/assets/prizes/special-lien-cookie.webp` | 個人協賛感謝賞 紹介 | 1400×788 / 94 KB |
 | `0905追加分/役満賞.png` | `public/assets/prizes/personal-santanda.webp` | 役満賞 紹介（三反田様） | 1400×788 / 94 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_個人_百軒カナリ様_` | `public/assets/prizes/personal-kanari.webp` | 本日のキュイ賞 紹介 | 1400×788 / 122 KB |
 | `デザイン周り/協賛紹介画像/協賛紹介_個人_うくな様_` | `public/assets/prizes/personal-ukuna.webp` | これが国士無双で賞 紹介 | 1400×788 / 108 KB |
